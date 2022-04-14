@@ -2,7 +2,7 @@
   MyCLINT
   #######*/
 
-module clint #(
+module myclint #(
     parameter ADDR_W  = 32,
     parameter DATA_W  = 32,
     parameter N_CORES = 1 // Number of cores, therefore the number of timecmp registers and timer interrupts
