@@ -1,11 +1,16 @@
 /*########
   MyCLINT
   #######*/
+`timescale 1ns / 1ps
+
 
 module myclint #(
     parameter ADDR_W  = 32,
     parameter DATA_W  = 32,
-    parameter N_CORES = 1 // Number of cores, therefore the number of timecmp registers and timer interrupts
+    parameter N_CORES = 1,
+    parameter [15:0] MTIMER_BASE = 16'hbff8,
+    parameter [15:0] MTIMERCMP_BASE = 16'h4000,
+    parameter [15:0] MSWI_BASE = 16'h0 // does base address are Backward Compatible With SiFive CLINT
 ) (
     input                 clk,
     input                 reset,
@@ -20,16 +25,15 @@ module myclint #(
 );
 
   // NEED to generate a real time clock -> input  rt_clk, // Real-time clock in (usually 32.768 kHz)
+  localparam AddrSel_bits = (N_CORES == 1) ? 1 : $clog2(N_CORES);
+
+  wire                write;
+  assign write = (wstrb == {4'hF});
+
 
   /* Machine-level Timer Device (MTIMER) */
-  wire [64:0]         mtime;
-  wire [N_CORES*64:0] mtimecmp;
-  wire                write;
-
   reg  [64:0]         mtime_reg;
   reg  [N_CORES*64:0] mtimecmp_reg;
-
-  assign write = valid && (wstrb != {4'h0});
 
   integer k;
   always @ ( posedge clk ) begin
@@ -37,25 +41,27 @@ module myclint #(
       mtip[k] = (mtime_reg >= mtimecmp_reg[(k+1)*64 -:64]);
     }
   end
-  // write
+  // mtimecmp
   always @ ( posedge clk ) begin
     if (reset) begin
-      mtime_reg    <= {64{1'b0}};
       mtimecmp_reg <= {64{1'b1}};
-    end else if (write) begin
-      mtimecmp_reg <= wdata;
-    end else begin
-      mtimecmp_reg <= mtimecmp_reg;
-      mtime_reg <= mtime_reg + 1;
+    end else if (valid && (address>=MTIMER_BASE) && (address<MTIMER_BASE+8)) begin
+      if (write)
+        mtimecmp_reg[(address[2]+1)*DATA_W -: DATA_W] <= wdata;
+      else
+        rdata <= mtimecmp_reg[(address[2]+1)*DATA_W -: DATA_W];
     end
   end
-  // read
+  // mtime
   always @ ( posedge clk ) begin
-    if (valid) begin
-      rdata <= {32{1'b0}};
-      ready <= {1'b1};
-    end else begin
-      ready <= {1'b0};
+    mtime_reg = mtime_reg + 1;
+    if (reset) begin
+      mtime_reg = {64{1'b0}};
+    end else if (valid && (address==MTIMERCMP_BASE) && (address<MTIMERCMP_BASE+8*N_CORES)) begin
+      if (write)
+        mtime_reg[(address[AddrSel_bits+1:2]+1)*DATA_W -: DATA_W] = wdata;
+      else
+        rdata = mtime_reg[(address[AddrSel_bits+1:2]+1)*DATA_W -: DATA_W];
     end
   end
 
@@ -68,15 +74,15 @@ module myclint #(
       msip[i] = msip_reg[i*32];
     }
   end
-  // write
+  // msip
   always @ ( posedge clk ) begin
     if (reset) begin
       msip_reg <= {32{1'b0}};
-    end else if (address==`MSWI_BASE) begin
+    end else if (valid && (address==MSWI_BASE) && (address<MSWI_BASE+4*N_CORES)) begin
       if (write)
         msip_reg <= {31{1'b0}, wdata[0]};
       else
-        rdata <= {31{1'b0}, msip_reg[0]}
+        rdata <= msip_reg;
     end else begin
       msip_reg <= msip_reg;
     end
