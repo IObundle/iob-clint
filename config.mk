@@ -13,6 +13,7 @@ MyCLINT_NAME:=MyCLINT
 #CPU ARCHITECTURE
 DATA_W := 32
 ADDR_W := 32
+N_CORES := 1
 
 #ROOT DIRECTORY ON REMOTE MACHINES
 REMOTE_ROOT_DIR ?=sandbox/myclint
@@ -21,10 +22,6 @@ REMOTE_ROOT_DIR ?=sandbox/myclint
 #default simulator running locally or remotely
 #check the respective Makefile in hardware/simulation/$(SIMULATOR) for specific settings
 SIMULATOR ?=icarus
-
-#DOCUMENTATION
-#default document to compile
-DOC ?= pb
 
 ####################################################################
 # DERIVED FROM PRIMARY PARAMETERS: DO NOT CHANGE BELOW THIS POINT
@@ -37,13 +34,10 @@ SW_DIR:=$(ROOT_DIR)/software
 HW_DIR=$(ROOT_DIR)/hardware
 SIM_DIR=$(HW_DIR)/simulation/$(SIMULATOR)
 
-#doc paths
-DOC_DIR=$(ROOT_DIR)/document/$(DOC)
-
 #define macros
 DEFINE+=$(defmacro)DATA_W=$(DATA_W)
 DEFINE+=$(defmacro)ADDR_W=$(ADDR_W)
-DEFINE+=$(defmacro)N_CORES=$(N_CORES) #peripherals
+DEFINE+=$(defmacro)N_CORES=$(N_CORES)
 
 #default baud and system clock freq
 BAUD=5000000
