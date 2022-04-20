@@ -4,7 +4,7 @@
 #
 ######################################################################
 
-MyCLINT_NAME:=MyCLINT
+MYCLINT_NAME:=MyCLINT
 
 #
 # PRIMARY PARAMETERS: CAN BE CHANGED BY USERS OR OVERRIDEN BY ENV VARS

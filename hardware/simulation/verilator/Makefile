@@ -3,12 +3,12 @@ SHELL := /bin/bash
 ROOT_DIR:=../../..
 
 defmacro:=-D
-incdir:=-I 
+incdir:=-I
 
 SIMULATOR=verilator
 SIM_SERVER=$(VSIM_SERVER)
 SIM_USER=$(VSIM_USER)
-SIM_PROC=Vsystem_top
+SIM_PROC=Vmyclint
 
 
 include ../simulation.mk
@@ -53,7 +53,7 @@ VERILATOR_FLAGS += +1800-2005ext+v # Use SystemVerilog 2005 with file extension 
 VERILATOR_FLAGS += --error-limit 1000 # Exit if number of errors passes 1000
 
 # Verilator source files
-VERILATOR_INPUT = $(INCLUDE_VERI) $(DEFINE) $(VSRC) --top-module system_top system_tb.cpp
+VERILATOR_INPUT = $(INCLUDE_VERI) $(DEFINE) $(VSRC) --top-module myclint system_tb.cpp
 ######################################################################
 
 comp: $(SIM_PROC)
