@@ -29,7 +29,7 @@ void Timer(unsigned int half_cycles){
   }
 }
 
-set_inputs(char* address, char* data, char* strb){
+void set_inputs(char* address, char* data, char* strb){
   unsigned int aux_num = 0;
   dut->valid = 1;
   sscanf(address, "%x", &aux_num);
@@ -41,7 +41,7 @@ set_inputs(char* address, char* data, char* strb){
   Timer(2);
 }
 
-read_outputs(){
+int read_outputs(){
   while(dut->ready != 1){
     Timer(2);
   }
