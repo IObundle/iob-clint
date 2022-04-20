@@ -7,7 +7,7 @@
 module myclint #(
     parameter ADDR_W  = 32,
     parameter DATA_W  = 32,
-    parameter N_CORES = 1,
+    parameter N_CORES = 1
 ) (
     input                 clk,
     input                 reset,
@@ -21,6 +21,13 @@ module myclint #(
     output [N_CORES-1:0]  msip  // Machine software interrupt (a.k.a inter-process-interrupt)
 );
 
+`ifdef VCD
+  initial begin
+     $dumpfile("system.vcd");
+     $dumpvars();
+  end
+`endif
+
   // NEED to generate a real time clock -> input  rt_clk, // Real-time clock in (usually 32.768 kHz)
   localparam AddrSelWidth = (N_CORES == 1) ? 1 : $clog2(N_CORES);
   // register offset, base address are Backward Compatible With SiFive CLINT
@@ -31,28 +38,33 @@ module myclint #(
   wire   write;
   assign write = (wstrb == {4'hF});
 
+  reg [DATA_W-1:0] rdata_reg;
+  assign rdata = rdata_reg;
 
   /* Machine-level Timer Device (MTIMER) */
   reg  [63:0]        mtime_reg;
-  reg  [N_CORES-1:0] mtimecmp_reg[63:0];
+  reg  [63:0]        mtimecmp_reg [N_CORES-1:0];
+  reg  [N_CORES-1:0] mtip_reg;
+
+  assign mtip = mtip_reg;
 
   integer k, c;
   always @ ( posedge clk ) begin
-    for (k=0; k<N_CORES; k=k+1){
-      mtip[k] = (mtime_reg >= mtimecmp_reg[(k+1)*64 -:64]);
-    }
+    for (k=0; k<N_CORES; k=k+1) begin
+      mtip_reg[k] = (mtime_reg >= mtimecmp_reg[64-1 -:64]);
+    end
   end
   // mtimecmp
   always @ ( posedge clk ) begin
     if (reset) begin
-      for (c=0; c<N_CORES; c=c+1){
+      for (c=0; c<N_CORES; c=c+1) begin
         mtimecmp_reg[c] <= {64{1'b1}};
-      }
+      end
     end else if (valid && (address[15:0]>=MTIME_BASE) && (address[15:0]<MTIME_BASE+8)) begin
       if (write)
-        mtimecmp_reg[(address[2]+1)*DATA_W -: DATA_W] <= wdata;
+        mtimecmp_reg[31 -:DATA_W] <= wdata;
       else
-        rdata <= mtimecmp_reg[(address[2]+1)*DATA_W -: DATA_W];
+        rdata_reg <= mtimecmp_reg[31 -: DATA_W];
     end
   end
   // mtime
@@ -64,30 +76,28 @@ module myclint #(
       if (write)
         mtime_reg[(address[AddrSelWidth+1:2]+1)*DATA_W -: DATA_W] = wdata;
       else
-        rdata = mtime_reg[(address[AddrSelWidth+1:2]+1)*DATA_W -: DATA_W];
+        rdata_reg <= mtime_reg[(address[AddrSelWidth+1:2]+1)*DATA_W -: DATA_W];
     end
   end
 
   /* Machine-level Software Interrupt Device (MSWI) */
   reg [N_CORES-1:0] msip_reg;
+  assign msip = msip_reg;
 
-  integer i, j;
-  always @ ( posedge clk ) begin
-    for (i=0; i<N_CORES; i=i+1){
-      msip[i] = msip_reg[i];
-    }
-  end
+  integer j;
   // msip
   always @ ( posedge clk ) begin
     if (reset) begin
-      for (j=0; j<N_CORES; j=j+1){
+      for (j=0; j<N_CORES; j=j+1) begin
         msip_reg[j] <= {1'b0};
-      }
+      end
     end else if (valid && (address[15:0]>=MSIP_BASE) && (address[15:0]<MSIP_BASE+4*N_CORES)) begin
-      if (write)
-        msip_reg[(address[AddrSelWidth+1:2]] <= wdata[0];
-      else
-        rdata <= {31{1'b0}, msip_reg[(address[AddrSelWidth+1:2]};
+      if (write) begin
+        msip_reg[address[AddrSelWidth+1:2]] <= wdata[0];
+      end
+      else begin
+        rdata_reg <= {{31{1'b0}}, msip_reg[address[AddrSelWidth+1:2]]};
+      end
     end
   end
 endmodule
