@@ -1,0 +1,7 @@
+# Ignore generated files
+hardware/simulation/*
+!hardware/simulation/simulation.mk
+!hardware/simulation/*/Makefile
+!hardware/simulation/*/system_tb.*
+!hardware/simulation/verilator/Makefile
+!hardware/simulation/verilator/system_tb.cpp
