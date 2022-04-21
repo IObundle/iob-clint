@@ -101,6 +101,7 @@ int main(int argc, char **argv, char **env){
     Timer(2);
     if (main_time>600000) break;
   }
+  Timer(2);
 
   dut->final();
 #ifdef VCD
