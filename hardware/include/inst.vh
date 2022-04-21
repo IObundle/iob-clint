@@ -8,7 +8,7 @@
      (
       //CPU interface
       .clk     (clk),
-      .rst     (reset),
+      .reset   (reset),
 
       .valid   (slaves_req[`valid(`CLINT)]),
       .address (slaves_req[`address(`CLINT, 0)]),
