@@ -49,7 +49,7 @@ module myclint #(
   assign mtip = mtip_reg;
 
   integer k, c;
-  always @ ( posedge clk ) begin
+  always @ ( * ) begin
     if (reset)
       for (k=0; k<N_CORES; k=k+1) begin
         mtip_reg[k] = {1'b0};
