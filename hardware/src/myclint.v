@@ -65,11 +65,11 @@ module myclint #(
       for (c=0; c<N_CORES; c=c+1) begin
         mtimecmp_reg[c] <= {64{1'b1}};
       end
-    end else if (valid && (address[15:0]>=MTIME_BASE) && (address[15:0]<MTIME_BASE+8)) begin
+    end else if (valid && (address[15:0]>=MTIMECMP_BASE) && (address[15:0]<(MTIMECMP_BASE+8*N_CORES))) begin
       if (write)
-        mtimecmp_reg[0][31 -:DATA_W] <= wdata;
+        mtimecmp_reg[address[AddrSelWidth+2:3]][(address[2]+1)*DATA_W-1 -:DATA_W] <= wdata;
       else
-        rdata_reg <= mtimecmp_reg[0][31 -: DATA_W];
+        rdata_reg <= mtimecmp_reg[address[AddrSelWidth+2:3]][(address[2]+1)*DATA_W-1 -: DATA_W];
     end
   end
   // mtime
@@ -77,11 +77,11 @@ module myclint #(
     mtime_reg = mtime_reg + 1;
     if (reset) begin
       mtime_reg = {64{1'b0}};
-    end else if (valid && (address[15:0]==MTIMECMP_BASE) && (address[15:0]<MTIMECMP_BASE+8*N_CORES)) begin
+    end else if (valid && (address[15:0]>=MTIME_BASE) && (address[15:0]<(MTIME_BASE+8))) begin
       if (write)
-        mtime_reg[(address[AddrSelWidth+1:2]+1)*DATA_W -: DATA_W] = wdata;
+        mtime_reg[(address[2]+1)*DATA_W-1 -: DATA_W] = wdata;
       else
-        rdata_reg <= mtime_reg[(address[AddrSelWidth+1:2]+1)*DATA_W -: DATA_W];
+        rdata_reg <= mtime_reg[(address[2]+1)*DATA_W-1 -: DATA_W];
     end
   end
 
@@ -96,7 +96,7 @@ module myclint #(
       for (j=0; j<N_CORES; j=j+1) begin
         msip_reg[j] <= {1'b0};
       end
-    end else if (valid && (address[15:0]>=MSIP_BASE) && (address[15:0]<MSIP_BASE+4*N_CORES)) begin
+    end else if (valid && (address[15:0]>=MSIP_BASE) && (address[15:0]<(MSIP_BASE+4*N_CORES))) begin
       if (write) begin
         msip_reg[address[AddrSelWidth+1:2]] <= wdata[0];
       end
