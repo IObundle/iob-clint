@@ -19,7 +19,7 @@ include $(ROOT_DIR)/hardware/hardware.mk
 
 
 #RULES
-build: $(VSRC) $(VHDR) $(HEXPROGS)
+build: $(VSRC) $(VHDR)
 ifeq ($(SIM_SERVER),)
 	bash -c "trap 'make kill-sim' INT TERM KILL EXIT; make comp"
 else
