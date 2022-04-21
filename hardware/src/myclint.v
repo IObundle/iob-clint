@@ -50,9 +50,14 @@ module myclint #(
 
   integer k, c;
   always @ ( posedge clk ) begin
-    for (k=0; k<N_CORES; k=k+1) begin
-      mtip_reg[k] = (mtime_reg >= mtimecmp_reg[64-1 -:64]);
-    end
+    if (reset)
+      for (k=0; k<N_CORES; k=k+1) begin
+        mtip_reg[k] = {1'b0};
+      end
+    else
+      for (k=0; k<N_CORES; k=k+1) begin
+        mtip_reg[k] = (mtime_reg >= mtimecmp_reg[0][64-1 -:64]);
+      end
   end
   // mtimecmp
   always @ ( posedge clk ) begin
@@ -62,9 +67,9 @@ module myclint #(
       end
     end else if (valid && (address[15:0]>=MTIME_BASE) && (address[15:0]<MTIME_BASE+8)) begin
       if (write)
-        mtimecmp_reg[31 -:DATA_W] <= wdata;
+        mtimecmp_reg[0][31 -:DATA_W] <= wdata;
       else
-        rdata_reg <= mtimecmp_reg[31 -: DATA_W];
+        rdata_reg <= mtimecmp_reg[0][31 -: DATA_W];
     end
   end
   // mtime
