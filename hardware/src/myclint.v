@@ -56,7 +56,7 @@ module myclint #(
       end
     else
       for (k=0; k<N_CORES; k=k+1) begin
-        mtip_reg[k] = (mtime_reg >= mtimecmp_reg[0][64-1 -:64]);
+        mtip_reg[k] = (mtime_reg >= mtimecmp_reg[k][63:0]);
       end
   end
   // mtimecmp
