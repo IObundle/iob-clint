@@ -1,8 +1,5 @@
 `timescale 1ns / 1ps
 
-`include "system.vh"
-
-
 //PHEADER
 
 module system_tb;
@@ -17,8 +14,16 @@ module system_tb;
   reg reset = 0;
 
   // DUT inputs
+  wire                 valid;
+  wire [`ADDR_W-1:0] address;
+  wire [`DATA_W-1:0]   wdata;
+  wire [`DATA_W/8-1:0]  strb;
 
   // DUT outputs
+  wire               ready;
+  wire [`DATA_W-1:0] rdata;
+  wire [`N_CORES-1:0] mtip;
+  wire [`N_CORES-1:0] msip;
 
   initial begin
     //assert reset
@@ -33,26 +38,28 @@ module system_tb;
 
 
 
-    while(1) begin
+    //while(1) begin
       // TO DO
-    end
+    //end
+    $display("Testbench finished!");
+    $finish;
   end
 
   myclint clint
     (
      //CPU interface
      .clk     (clk),
-     .rst     (reset),
+     .reset   (reset),
 
      .valid   (valid),
-     .address ({16{1'b0}, address[15:0]}),
+     .address (address),
      .wdata   (wdata),
      .wstrb   (strb),
      .rdata   (rdata),
      .ready   (ready),
 
-     .mtip    (timerInterrupt),
-     .msip    (softwareInterrupt)
+     .mtip    (mtip),
+     .msip    (msip)
      );
 
 

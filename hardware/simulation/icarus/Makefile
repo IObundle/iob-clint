@@ -10,6 +10,7 @@ SIM_PROC=a.out
 
 include ../simulation.mk
 
+VSRC+=./system_tb.sv
 #simulator flags
 VLOG = iverilog -W all -g2005-sv $(INCLUDE) $(DEFINE)
 
