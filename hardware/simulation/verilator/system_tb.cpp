@@ -10,6 +10,10 @@
 #define BAUD 5000000
 #define CLK_PERIOD 10000 // 10 ns
 
+#define MSIP_BASE 0
+#define MTIMECMP_BASE 16384
+#define MTIME_BASE 49144
+
 vluint64_t main_time = 0;
 VerilatedVcdC* tfp = NULL;
 Vmyclint* dut = NULL;
@@ -29,15 +33,12 @@ void Timer(unsigned int half_cycles){
   }
 }
 
-void set_inputs(char* address, char* data, char* strb){
+void set_inputs(int address, int data, int strb){
   unsigned int aux_num = 0;
   dut->valid = 1;
-  sscanf(address, "%x", &aux_num);
-  dut->address = aux_num;
-  sscanf(data, "%x", &aux_num);
-  dut->wdata = aux_num;
-  sscanf(strb, "%x", &aux_num);
-  dut->wstrb = aux_num;
+  dut->address = address;
+  dut->wdata = data;
+  dut->wstrb = strb;
   Timer(2);
 }
 
@@ -84,7 +85,9 @@ int main(int argc, char **argv, char **env){
   }
 
   // set timer compare Register
-  set_inputs("0x4000", "0x000F", "0xF");
+  // set_inputs(address, data, strb);
+  set_inputs(MTIMECMP_BASE, 20, 15);
+  set_inputs(MTIMECMP_BASE+4, 0, 15);
 
   while(1){
     if(dut->mtip > 0){
@@ -95,7 +98,8 @@ int main(int argc, char **argv, char **env){
         printf("Machine Software Interrupt is trigered\n");
         break;
     }
-
+    Timer(2);
+    if (main_time>600000) break;
   }
 
   dut->final();
