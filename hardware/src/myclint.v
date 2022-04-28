@@ -9,14 +9,15 @@ module myclint #(
     parameter DATA_W  = 32,
     parameter N_CORES = 1
 ) (
-    input                 clk,
-    input                 reset,
-    input                 valid,
-    input  [ADDR_W-1:0]   address,
-    input  [DATA_W-1:0]   wdata,
-    input  [DATA_W/8-1:0] wstrb,
-    output [DATA_W-1:0]   rdata,
-    output                ready,
+    input                 clk, // Clock
+    input                 rt_clk, // Real-time clock in (usually 32.768 kHz)
+    input                 reset, // Reset
+    input                 valid, // Request valid
+    input  [ADDR_W-1:0]   address, // Request address
+    input  [DATA_W-1:0]   wdata, // Request data
+    input  [DATA_W/8-1:0] wstrb, // Request
+    output [DATA_W-1:0]   rdata, // Responce data
+    output                ready, // Responce ready
     output [N_CORES-1:0]  mtip, // Machine timer interrupt pin
     output [N_CORES-1:0]  msip  // Machine software interrupt (a.k.a inter-process-interrupt)
 );
@@ -41,10 +42,13 @@ module myclint #(
   reg [DATA_W-1:0] rdata_reg;
   assign rdata = rdata_reg;
 
+
   /* Machine-level Timer Device (MTIMER) */
   reg  [63:0]        mtime_reg;
   reg  [63:0]        mtimecmp_reg [N_CORES-1:0];
   reg  [N_CORES-1:0] mtip_reg;
+
+  wire increment_timer;
 
   assign mtip = mtip_reg;
 
@@ -74,7 +78,9 @@ module myclint #(
   end
   // mtime
   always @ ( posedge clk ) begin
-    mtime_reg = mtime_reg + 1;
+    if (increment_timer) begin
+      mtime_reg = mtime_reg + 1;
+    end
     if (reset) begin
       mtime_reg = {64{1'b0}};
     end else if (valid && (address[15:0]>=MTIME_BASE) && (address[15:0]<(MTIME_BASE+8))) begin
@@ -105,4 +111,23 @@ module myclint #(
       end
     end
   end
+
+  /* Real Time Clock and Device Clock Synconizer, in order to minimize meta stability */
+  localparam STAGES = 2;
+
+  wire rtc_value;
+  reg  rtc_previous;
+  reg  [STAGES-1:0] rtc_states;
+
+  assign increment_timer =  rtc_value & (~rtc_previous); // detects rising edge
+  assign rtc_value = rtc_states[STAGES-1];
+  always @(posedge clk, negedge rt_clk) begin
+    if (reset) begin
+        rtc_states <= {STAGES{1'b0}};
+        rtc_previous <= 1'b0;
+    end else begin
+        rtc_states <= {rtc_states[STAGES-2:0], rt_clk};
+        rtc_previous <= rtc_value;
+    end
+end
 endmodule
