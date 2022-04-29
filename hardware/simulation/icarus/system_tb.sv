@@ -5,10 +5,13 @@
 module system_tb;
 
   parameter realtime clk_per = 1s/`FREQ;
+  parameter realtime rtc_per = 1s/`RTC_FREQ;
 
-  //clock
+  //clock & real-time clock
   reg clk = 1;
+  reg rtc = 1;
   always #(clk_per/2) clk = ~clk;
+  always #(rtc_per/2) rtc = ~rtc;
 
   //reset
   reg reset = 0;
@@ -49,6 +52,7 @@ module system_tb;
     (
      //CPU interface
      .clk     (clk),
+     .rt_clk  (rtc),
      .reset   (reset),
 
      .valid   (valid),

@@ -6,9 +6,8 @@
 #include "verilated_vcd_c.h"
 
 // other macros
-#define FREQ 100000000
-#define BAUD 5000000
-#define CLK_PERIOD 10000 // 10 ns
+#define CLK_PERIOD 10 // 10 ns
+#define RTC_PERIOD 30517 // 30.517us
 
 #define MSIP_BASE 0
 #define MTIMECMP_BASE 16384
@@ -18,18 +17,23 @@ vluint64_t main_time = 0;
 VerilatedVcdC* tfp = NULL;
 Vmyclint* dut = NULL;
 
-double sc_time_stamp () {
+double sc_time_stamp(){
   return main_time;
 }
 
-void Timer(unsigned int half_cycles){
-  for(int i = 0; i<half_cycles; i++){
-    dut->clk = !(dut->clk);
+void Timer(unsigned int ns){
+  for(int i = 0; i<ns; i++){
+    main_time += 1;
+    if(!(main_time%(CLK_PERIOD/2))){
+      dut->clk = !(dut->clk);
+    }
+    if(!(main_time%(RTC_PERIOD/2))){
+      dut->rt_clk = !(dut->rt_clk);
+    }
     dut->eval();
 #ifdef VCD
     tfp->dump(main_time);
 #endif
-    main_time += CLK_PERIOD/2;
   }
 }
 
@@ -39,12 +43,13 @@ void set_inputs(int address, int data, int strb){
   dut->address = address;
   dut->wdata = data;
   dut->wstrb = strb;
-  Timer(2);
+  Timer(CLK_PERIOD);
+  dut->valid = 0;
 }
 
 int read_outputs(){
   while(dut->ready != 1){
-    Timer(2);
+    Timer(CLK_PERIOD);
   }
   return dut->rdata;
 }
@@ -62,6 +67,7 @@ int main(int argc, char **argv, char **env){
 #endif
 
   dut->clk = 0;
+  dut->rt_clk = 0;
   dut->reset = 0;
   dut->valid = 0;
   dut->address = 0;
@@ -74,20 +80,17 @@ int main(int argc, char **argv, char **env){
 #endif
 
   // Reset sequence
-  for(int i = 0; i<5; i++){
-    dut->clk = !(dut->clk);
-    if(i==2 || i==4) dut->reset = !(dut->reset);
-    dut->eval();
-#ifdef VCD
-    tfp->dump(main_time);
-#endif
-    main_time += CLK_PERIOD/2;
-  }
+  Timer(CLK_PERIOD);
+  dut->reset = !(dut->reset);
+  Timer(CLK_PERIOD);
+  dut->reset = !(dut->reset);
 
   // set timer compare Register
   // set_inputs(address, data, strb);
   set_inputs(MTIMECMP_BASE, 20, 15);
+  read_outputs();
   set_inputs(MTIMECMP_BASE+4, 0, 15);
+  read_outputs();
 
   while(1){
     if(dut->mtip > 0){
@@ -98,11 +101,12 @@ int main(int argc, char **argv, char **env){
         printf("Machine Software Interrupt is trigered\n");
         break;
     }
-    Timer(2);
-    if (main_time>600000) break;
+    Timer(CLK_PERIOD);
+    if (main_time>RTC_PERIOD*100) break;
   }
-  Timer(2);
+  Timer(CLK_PERIOD);
 
+  printf("Testbench finished!\n");
   dut->final();
 #ifdef VCD
   tfp->close();

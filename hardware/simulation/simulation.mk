@@ -1,12 +1,14 @@
 #DEFINES
 
-#default baud and freq for simulation
+#default freq and real time clock freq for simulation
 BAUD ?=5000000
 FREQ ?=100000000
+RTC_FREQ ?=32768
 
 #define for testbench
 DEFINE+=$(defmacro)BAUD=$(BAUD)
 DEFINE+=$(defmacro)FREQ=$(FREQ)
+DEFINE+=$(defmacro)RTC_FREQ=$(RTC_FREQ)
 
 #produce waveform dump
 VCD ?=0
