@@ -123,7 +123,12 @@ module myclint #(
       msip_rsp <= 0;
     end
   end
-  assign ready = msip_rsp || timer_rsp || timecmp_rsp;
+
+  /* Don't know if the delay is needed */
+  reg ready_reg;
+  always @ ( posedge clk )
+    ready_reg <= msip_rsp || timer_rsp || timecmp_rsp;
+  assign ready = ready_reg;
 
   /* Real Time Clock and Device Clock Synconizer, in order to minimize meta stability */
   localparam STAGES = 2;
