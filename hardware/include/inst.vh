@@ -8,6 +8,7 @@
      (
       //CPU interface
       .clk     (clk),
+      .rt_clk  (rtc),
       .reset   (reset),
 
       .valid   (slaves_req[`valid(`CLINT)]),
