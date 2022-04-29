@@ -23,7 +23,6 @@ double sc_time_stamp(){
 
 void Timer(unsigned int ns){
   for(int i = 0; i<ns; i++){
-    main_time += 1;
     if(!(main_time%(CLK_PERIOD/2))){
       dut->clk = !(dut->clk);
     }
@@ -34,6 +33,7 @@ void Timer(unsigned int ns){
 #ifdef VCD
     tfp->dump(main_time);
 #endif
+    main_time += 1;
   }
 }
 
@@ -65,6 +65,7 @@ int main(int argc, char **argv, char **env){
   dut->trace(tfp, 1);
   tfp->open("system.vcd");
 #endif
+  main_time = 0;
 
   dut->clk = 0;
   dut->rt_clk = 0;

@@ -44,9 +44,11 @@ module myclint #(
 
 
   /* Machine-level Timer Device (MTIMER) */
-  reg  [63:0]        mtime_reg;
-  reg  [63:0]        mtimecmp_reg [N_CORES-1:0];
-  reg  [N_CORES-1:0] mtip_reg;
+  reg [63:0]        mtime_reg;
+  reg [63:0]        mtimecmp_reg [N_CORES-1:0];
+  reg [N_CORES-1:0] mtip_reg;
+  reg               timer_rsp;
+  reg               timecmp_rsp;
 
   wire increment_timer;
 
@@ -74,6 +76,9 @@ module myclint #(
         mtimecmp_reg[address[AddrSelWidth+2:3]][(address[2]+1)*DATA_W-1 -:DATA_W] <= wdata;
       else
         rdata_reg <= mtimecmp_reg[address[AddrSelWidth+2:3]][(address[2]+1)*DATA_W-1 -: DATA_W];
+      timecmp_rsp <= 1;
+    end else begin
+      timecmp_rsp <= 0;
     end
   end
   // mtime
@@ -88,11 +93,16 @@ module myclint #(
         mtime_reg[(address[2]+1)*DATA_W-1 -: DATA_W] = wdata;
       else
         rdata_reg <= mtime_reg[(address[2]+1)*DATA_W-1 -: DATA_W];
+      timer_rsp <= 1;
+    end else begin
+      timer_rsp <= 0;
     end
   end
 
   /* Machine-level Software Interrupt Device (MSWI) */
   reg [N_CORES-1:0] msip_reg;
+  reg               msip_rsp;
+
   assign msip = msip_reg;
 
   integer j;
@@ -105,12 +115,15 @@ module myclint #(
     end else if (valid && (address[15:0]>=MSIP_BASE) && (address[15:0]<(MSIP_BASE+4*N_CORES))) begin
       if (write) begin
         msip_reg[address[AddrSelWidth+1:2]] <= wdata[0];
-      end
-      else begin
+      end else begin
         rdata_reg <= {{31{1'b0}}, msip_reg[address[AddrSelWidth+1:2]]};
       end
+      msip_rsp <= 1;
+    end else begin
+      msip_rsp <= 0;
     end
   end
+  assign ready = msip_rsp || timer_rsp || timecmp_rsp;
 
   /* Real Time Clock and Device Clock Synconizer, in order to minimize meta stability */
   localparam STAGES = 2;
@@ -129,5 +142,6 @@ module myclint #(
         rtc_states <= {rtc_states[STAGES-2:0], rt_clk};
         rtc_previous <= rtc_value;
     end
-end
+  end
+
 endmodule
