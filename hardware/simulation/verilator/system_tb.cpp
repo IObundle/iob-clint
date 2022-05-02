@@ -37,6 +37,13 @@ void Timer(unsigned int ns){
   }
 }
 
+int wait_responce(){
+  while(dut->ready != 1){
+    Timer(CLK_PERIOD);
+  }
+  return dut->rdata;
+}
+
 void set_inputs(int address, int data, int strb){
   unsigned int aux_num = 0;
   dut->valid = 1;
@@ -45,13 +52,18 @@ void set_inputs(int address, int data, int strb){
   dut->wstrb = strb;
   Timer(CLK_PERIOD);
   dut->valid = 0;
+  wait_responce();
 }
 
-int read_outputs(){
-  while(dut->ready != 1){
-    Timer(CLK_PERIOD);
-  }
-  return dut->rdata;
+vluint64_t get_time(){
+  vluint64_t read_time = 0;
+
+  set_inputs(MTIME_BASE, 0, 0);
+  *(int *)(&read_time) = wait_responce();
+  set_inputs(MTIME_BASE+4, 0, 0);
+  *(int *)(&read_time+4) = wait_responce();
+
+  return read_time;
 }
 
 int main(int argc, char **argv, char **env){
@@ -89,18 +101,22 @@ int main(int argc, char **argv, char **env){
   // set timer compare Register
   // set_inputs(address, data, strb);
   set_inputs(MTIMECMP_BASE, 20, 15);
-  read_outputs();
   set_inputs(MTIMECMP_BASE+4, 0, 15);
-  read_outputs();
+
+  vluint64_t read_time = 0;
 
   while(1){
     if(dut->mtip > 0){
         printf("Machine Timer Interrupt is trigered\n");
-        break;
+        set_inputs(MSIP_BASE, 1, 15);
     }
     if(dut->msip > 0){
         printf("Machine Software Interrupt is trigered\n");
-        break;
+        set_inputs(MSIP_BASE, 0, 15);
+        read_time = get_time();
+        printf("Timer count: %ld\n", read_time);
+        set_inputs(MTIME_BASE, 0, 15);
+        set_inputs(MTIMECMP_BASE, RTC_PERIOD*100, 15);
     }
     Timer(CLK_PERIOD);
     if (main_time>RTC_PERIOD*100) break;
