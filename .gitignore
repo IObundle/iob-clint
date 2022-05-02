@@ -1,5 +1,4 @@
 # Ignore generated files
-hardware/simulation/*
-!hardware/simulation/simulation.mk
+hardware/simulation/*/*
 !hardware/simulation/*/Makefile
 !hardware/simulation/*/system_tb.*
