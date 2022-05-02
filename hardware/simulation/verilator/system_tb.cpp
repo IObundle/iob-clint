@@ -44,24 +44,21 @@ int wait_responce(){
   return dut->rdata;
 }
 
-void set_inputs(int address, int data, int strb){
-  unsigned int aux_num = 0;
+int set_inputs(int address, int data, int strb){
   dut->valid = 1;
   dut->address = address;
   dut->wdata = data;
   dut->wstrb = strb;
   Timer(CLK_PERIOD);
   dut->valid = 0;
-  wait_responce();
+  return wait_responce();
 }
 
 vluint64_t get_time(){
   vluint64_t read_time = 0;
 
-  set_inputs(MTIME_BASE, 0, 0);
-  *(int *)(&read_time) = wait_responce();
-  set_inputs(MTIME_BASE+4, 0, 0);
-  *(int *)(&read_time+4) = wait_responce();
+  *(int *)(&read_time) = set_inputs(MTIME_BASE, 0, 0);
+  *(int *)(&read_time+4) = set_inputs(MTIME_BASE+4, 0, 0);
 
   return read_time;
 }
