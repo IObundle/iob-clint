@@ -17,6 +17,7 @@ This clint unit follows the RISC-V Specification.
 |       MSIP      |     xxxx0000     | n*4 Bytes |       Machine       | Inter-processor (or software) interrupts |
 |     MTIMECMP    |     xxxx4000     | n*8 Bytes |       Machine       |               Timer events               |
 |      MTIME      |     xxxxbff8     |  8 Bytes  |       Machine       |          Fixed-frequency counter         |
+
 *note: n correspond to the number of HART's (hardware threads) on a system. The system has been tested to work with 1 HART.
 ## Machine-level Timer Device (MTIMER)
 The MTIMER hardware component corresponds to the MTIME and MTIMECMP registers.
