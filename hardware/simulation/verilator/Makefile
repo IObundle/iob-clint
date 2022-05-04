@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-ROOT_DIR:=../../..
+CLINT_DIR:=../../..
 
 defmacro:=-D
 incdir:=-I

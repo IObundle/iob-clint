@@ -1,4 +1,4 @@
-ROOT_DIR:=.
+CLINT_DIR:=.
 include ./config.mk
 
 
@@ -7,12 +7,12 @@ include ./config.mk
 #
 
 sim-build:
-	make -C $(SIM_DIR) build
+	make -C $(CLINT_SIM_DIR) build
 
 sim-run: sim-build
-	make -C $(SIM_DIR) run
+	make -C $(CLINT_SIM_DIR) run
 
 sim-clean:
-	make -C $(SIM_DIR) clean
+	make -C $(CLINT_SIM_DIR) clean
 
 .PHONY: sim-build sim-run sim-clean

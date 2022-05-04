@@ -1,23 +1,26 @@
 #default baud rate for hardware
 BAUD ?=115200
 
-include $(ROOT_DIR)/config.mk
+include $(CLINT_DIR)/config.mk
 
 #add itself to MODULES list
 HW_MODULES+=$(MYCLINT_NAME)
 
 #HARDWARE PATHS
-INC_DIR:=$(HW_DIR)/include
-SRC_DIR:=$(HW_DIR)/src
+CLINT_INC_DIR:=$(CLINT_HW_DIR)/include
+CLINT_SRC_DIR:=$(CLINT_HW_DIR)/src
 
 #INCLUDES
-INCLUDE+=$(incdir). $(incdir)$(INC_DIR)
+INCLUDE+=$(incdir). $(incdir)$(CLINT_INC_DIR)
 
 #system
-VSRC+=$(SRC_DIR)/myclint.v
+VSRC+=$(CLINT_SRC_DIR)/myclint.v
+
+#headers
+VHDR+=$(wildcard $(CLINT_INC_DIR)/*.vh)
 
 #clean general hardware files
-hw-clean: gen-clean
-	@rm -f *.v *.hex *.bin $(SRC_DIR)/system.v $(TB_DIR)/system_tb.v *.vh
+clint_hw_clean: gen-clean
+	@rm -f *.v *.hex *.bin $(CLINT_SRC_DIR)/system.v $(CLINT_TB_DIR)/system_tb.v *.vh
 
 .PHONY: hw-clean

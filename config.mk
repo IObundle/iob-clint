@@ -15,8 +15,8 @@ DATA_W := 32
 ADDR_W := 32
 N_CORES := 1
 
-#ROOT DIRECTORY ON REMOTE MACHINES
-REMOTE_ROOT_DIR ?=sandbox/myclint
+#CLINT DIRECTORY ON REMOTE MACHINES
+REMOTE_CLINT_DIR ?=sandbox/myclint
 
 #SIMULATION
 #default simulator running locally or remotely
@@ -28,11 +28,11 @@ SIMULATOR ?=icarus
 ####################################################################
 
 #sw paths
-SW_DIR:=$(ROOT_DIR)/software
+CLINT_SW_DIR:=$(CLINT_DIR)/software
 
 #hw paths
-HW_DIR=$(ROOT_DIR)/hardware
-SIM_DIR=$(HW_DIR)/simulation/$(SIMULATOR)
+CLINT_HW_DIR=$(CLINT_DIR)/hardware
+CLINT_SIM_DIR=$(CLINT_HW_DIR)/simulation/$(SIMULATOR)
 
 #define macros
 DEFINE+=$(defmacro)DATA_W=$(DATA_W)
