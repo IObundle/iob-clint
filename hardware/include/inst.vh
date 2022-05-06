@@ -12,7 +12,7 @@
       .reset   (reset),
 
       .valid   (slaves_req[`valid(`CLINT)]),
-      .address (slaves_req[`address(`CLINT, 0)]),
+      .address (slaves_req[`address(`CLINT, `ADDR_W)]),
       .wdata   (slaves_req[`wdata(`CLINT)]),
       .wstrb   (slaves_req[`wstrb(`CLINT)]),
       .rdata   (slaves_resp[`rdata(`CLINT)]),

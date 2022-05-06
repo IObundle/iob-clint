@@ -46,7 +46,7 @@ FREQ=100000000
 SHELL = /bin/bash
 
 #RULES
-gen-clean:
+clint_gen_clean:
 	@rm -f *# *~
 
 .PHONY: gen-clean
