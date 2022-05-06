@@ -7,6 +7,9 @@
 #define MTIME_BASE 49144
 
 //Functions
+static int base;
+void clint_init(int);
+
 void clint_set_timer(unsigned long long);
 void clint_set_timercmp(unsigned long long, int);
 void clint_set_msip(int, int);
