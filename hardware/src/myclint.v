@@ -41,6 +41,8 @@ module myclint #(
 
   reg [DATA_W-1:0] rdata_reg;
   assign rdata = rdata_reg;
+  always @ ( posedge clk )
+    if (reset) rdata_reg = {DATA_W{1'b0}};
 
 
   /* Machine-level Timer Device (MTIMER) */
