@@ -141,14 +141,18 @@ module myclint #(
 
   assign increment_timer =  rtc_value & (~rtc_previous); // detects rising edge
   assign rtc_value = rtc_states[STAGES-1];
-  always @(posedge clk, negedge rt_clk) begin
-    if (reset) begin
+  // Sync rt clk with clk
+  always @( posedge clk ) begin
+    if (reset)
         rtc_states <= {STAGES{1'b0}};
-        rtc_previous <= 1'b0;
-    end else begin
+    else
         rtc_states <= {rtc_states[STAGES-2:0], rt_clk};
+  end
+  always @( posedge clk ) begin
+    if (reset)
+        rtc_previous <= 1'b0;
+    else
         rtc_previous <= rtc_value;
-    end
   end
 
 endmodule
