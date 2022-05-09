@@ -42,7 +42,7 @@ module myclint #(
   reg [DATA_W-1:0] rdata_reg;
   assign rdata = rdata_reg;
   always @ ( posedge clk )
-    if (reset) rdata_reg = {DATA_W{1'b0}};
+    if (reset) rdata_reg <= {DATA_W{1'b0}};
 
 
   /* Machine-level Timer Device (MTIMER) */
@@ -86,13 +86,13 @@ module myclint #(
   // mtime
   always @ ( posedge clk ) begin
     if (increment_timer) begin
-      mtime_reg = mtime_reg + 1;
+      mtime_reg <= mtime_reg + 1;
     end
     if (reset) begin
-      mtime_reg = {64{1'b0}};
+      mtime_reg <= {64{1'b0}};
     end else if (valid && (address[15:0]>=MTIME_BASE) && (address[15:0]<(MTIME_BASE+8))) begin
       if (write)
-        mtime_reg[(address[2]+1)*DATA_W-1 -: DATA_W] = wdata;
+        mtime_reg[(address[2]+1)*DATA_W-1 -: DATA_W] <= wdata;
       else
         rdata_reg <= mtime_reg[(address[2]+1)*DATA_W-1 -: DATA_W];
       timer_rsp <= 1;
