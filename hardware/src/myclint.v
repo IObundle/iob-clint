@@ -22,7 +22,7 @@ module myclint #(
     output [N_CORES-1:0]  msip  // Machine software interrupt (a.k.a inter-process-interrupt)
 );
 
-`ifdef VCD
+`ifdef CLINT_VCD
   initial begin
      $dumpfile("system.vcd");
      $dumpvars();

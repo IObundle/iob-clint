@@ -14,7 +14,8 @@ DEFINE+=$(defmacro)RTC_FREQ=$(RTC_FREQ)
 VCD ?=0
 
 ifeq ($(VCD),1)
-DEFINE+=$(defmacro)VCD
+CLINT_VCD = 1
+DEFINE+=$(defmacro)CLINT_VCD
 endif
 
 include $(CLINT_DIR)/hardware/hardware.mk
