@@ -54,7 +54,7 @@ module system_tb;
     set_inputs(`MTIMECMP_BASE+4, 0, 15, timer_read[31:0]);
     while(1) begin
         if(mtip > 0)begin
-            $display("Machine Timer Interrupt is trigere.");
+            $display("Machine Timer Interrupt is trigered.");
             set_inputs(`MSIP_BASE, 1, 15, timer_read[31:0]);
         end
         if(msip > 0)begin
