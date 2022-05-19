@@ -56,13 +56,14 @@ int main() {
 // Force the alignment for mtvec.BASE. A 'C' extension program could be aligned to to bytes.
 #pragma GCC optimize ("align-functions=4")
 static void irq_entry(void)  {
-    printf("Hello interrupt\n");
+    printf("Entered IRQ.\n");
     uint_xlen_t this_cause = csr_read_mcause();
     if (this_cause &  MCAUSE_INTERRUPT_BIT_MASK) {
         this_cause &= 0xFF;
         // Known exceptions
         switch (this_cause) {
-        case RISCV_INT_MASK_MTI :
+        case RISCV_INT_POS_MTI :
+            printf("Time interrupt.\n");
             // Timer exception, keep up the one second tick.
             mtimer_set_raw_time_cmp(MTIMER_SECONDS_TO_CLOCKS(1));
             timestamp = mtimer_get_raw_time();
