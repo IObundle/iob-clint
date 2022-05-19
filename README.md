@@ -36,3 +36,4 @@ The each Machine Software Interrupt is wired to the corresponding MSIP register.
 - RISC-V Advanced Core Local Interruptor Specification -> https://github.com/riscv/riscv-aclint/blob/main/riscv-aclint.adoc
 - IOb-SoC -> https://github.com/IObundle/iob-soc
 - CVA6 CLINT -> https://github.com/openhwgroup/cva6/tree/master/corev_apu/clint
+- Bare Metal Interrupt Software -> https://github.com/five-embeddev/riscv-scratchpad/tree/master/baremetal-startup-c/src
