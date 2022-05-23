@@ -34,10 +34,6 @@ CLINT_SW_DIR:=$(CLINT_DIR)/software
 CLINT_HW_DIR=$(CLINT_DIR)/hardware
 CLINT_SIM_DIR=$(CLINT_HW_DIR)/simulation/$(SIMULATOR)
 
-#define macros
-DEFINE+=$(defmacro)DATA_W=$(DATA_W)
-DEFINE+=$(defmacro)ADDR_W=$(ADDR_W)
-DEFINE+=$(defmacro)N_CORES=$(N_CORES)
 
 #default baud and system clock freq
 BAUD=5000000

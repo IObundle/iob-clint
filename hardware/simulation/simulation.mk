@@ -20,6 +20,10 @@ endif
 
 include $(CLINT_DIR)/hardware/hardware.mk
 
+#define macros
+DEFINE+=$(defmacro)DATA_W=$(DATA_W)
+DEFINE+=$(defmacro)ADDR_W=$(ADDR_W)
+DEFINE+=$(defmacro)N_CORES=$(N_CORES)
 
 #RULES
 build: $(VSRC) $(VHDR)
