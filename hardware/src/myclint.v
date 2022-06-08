@@ -39,10 +39,22 @@ module myclint #(
   wire   write;
   assign write = (wstrb == {4'hF});
 
-  reg [DATA_W-1:0] rdata_reg;
-  assign rdata = rdata_reg;
-  always @ ( posedge clk )
-    if (reset) rdata_reg <= {DATA_W{1'b0}};
+  //reg [DATA_W-1:0] rdata_reg;
+  reg [DATA_W-1:0] rdata_timecmp;
+  reg [DATA_W-1:0] rdata_timer;
+  reg [DATA_W-1:0] rdata_msip;
+  assign rdata = timecmp_rsp ? rdata_timecmp : (timer_rsp ? rdata_timer : (msip_rsp ? rdata_msip : {DATA_W{1'b0}}));
+  always @ ( posedge clk ) begin
+    ///if (reset) rdata_reg <= {DATA_W{1'b0}};
+    ///else if (timecmp_rsp) rdata_reg <= rdata_timecmp;
+    ///else if (timer_rsp) rdata_reg <= rdata_timer;
+    ///else if (msip_rsp) rdata_reg <= rdata_msip;
+    if (reset) begin
+      rdata_timecmp <= {DATA_W{1'b0}};
+      rdata_timer <= {DATA_W{1'b0}};
+      rdata_msip <= {DATA_W{1'b0}};
+    end
+  end
 
 
   /* Machine-level Timer Device (MTIMER) */
@@ -77,7 +89,7 @@ module myclint #(
       if (write)
         mtimecmp_reg[address[AddrSelWidth+2:3]][(address[2]+1)*DATA_W-1 -:DATA_W] <= wdata;
       else
-        rdata_reg <= mtimecmp_reg[address[AddrSelWidth+2:3]][(address[2]+1)*DATA_W-1 -: DATA_W];
+        rdata_timecmp <= mtimecmp_reg[address[AddrSelWidth+2:3]][(address[2]+1)*DATA_W-1 -: DATA_W];
       timecmp_rsp <= 1;
     end else begin
       timecmp_rsp <= 0;
@@ -94,7 +106,7 @@ module myclint #(
       if (write)
         mtime_reg[(address[2]+1)*DATA_W-1 -: DATA_W] <= wdata;
       else
-        rdata_reg <= mtime_reg[(address[2]+1)*DATA_W-1 -: DATA_W];
+        rdata_timer <= mtime_reg[(address[2]+1)*DATA_W-1 -: DATA_W];
       timer_rsp <= 1;
     end else begin
       timer_rsp <= 0;
@@ -115,11 +127,10 @@ module myclint #(
         msip_reg[j] <= {1'b0};
       end
     end else if (valid && (address[15:0]>=MSIP_BASE) && (address[15:0]<(MSIP_BASE+4*N_CORES))) begin
-      if (write) begin
+      if (write)
         msip_reg[address[AddrSelWidth+1:2]] <= wdata[0];
-      end else begin
-        rdata_reg <= {{31{1'b0}}, msip_reg[address[AddrSelWidth+1:2]]};
-      end
+      else
+        rdata_msip <= {{31{1'b0}}, msip_reg[address[AddrSelWidth+1:2]]};
       msip_rsp <= 1;
     end else begin
       msip_rsp <= 0;
@@ -128,7 +139,7 @@ module myclint #(
 
   /* Don't know if the delay is needed */
   reg ready_reg;
-  always @ ( posedge clk )
+  always @ ( * )
     ready_reg <= msip_rsp || timer_rsp || timecmp_rsp;
   assign ready = ready_reg;
 
