@@ -95,6 +95,7 @@ module system_tb;
   task wait_responce;
     output [31:0] data_read;
     begin
+      data_read = 0;
       while(ready != 1)
         @ (posedge clk) #1
       data_read = rdata;
@@ -108,10 +109,12 @@ module system_tb;
     output [31:0] data_read;
     begin
       valid = 1;
+      data_read = 0;
       address = set_address;
       wdata = set_data;
       wstrb = set_strb;
       @ (posedge clk) #1 valid = 0;
+      wstrb = 0;
       wait_responce(data_read);
     end
   endtask
@@ -119,6 +122,7 @@ module system_tb;
   task get_time;
     output [63:0] read_time;
     begin
+      read_time = 0;
       set_inputs(`MTIME_BASE, 0, 0, read_time[31:0]);
       set_inputs(`MTIME_BASE+4, 0, 0, read_time[63:32]);
     end
