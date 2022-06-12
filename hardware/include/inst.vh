@@ -4,12 +4,12 @@
    // CLINT
    //
 
-   myclint clint
+   iob_clint clint
      (
-      //CPU interface
       .clk     (clk),
+      .rst     (reset),
+
       .rt_clk  (rtc),
-      .reset   (reset),
 
       .valid   (slaves_req[`valid(`CLINT)]),
       .address (slaves_req[`address(`CLINT, `ADDR_W)]),

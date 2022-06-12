@@ -8,7 +8,7 @@ incdir:=-I
 SIMULATOR=verilator
 SIM_SERVER=$(VSIM_SERVER)
 SIM_USER=$(VSIM_USER)
-SIM_PROC=Vmyclint
+SIM_PROC=V$(TOP_MODULE)
 
 
 include ../simulation.mk
@@ -53,7 +53,7 @@ VERILATOR_FLAGS += +1800-2005ext+v # Use SystemVerilog 2005 with file extension 
 VERILATOR_FLAGS += --error-limit 1000 # Exit if number of errors passes 1000
 
 # Verilator source files
-VERILATOR_INPUT = $(INCLUDE_VERI) $(DEFINE) $(VSRC) --top-module myclint system_tb.cpp
+VERILATOR_INPUT = $(INCLUDE_VERI) $(DEFINE) $(VSRC) --top-module $(TOP_MODULE) $(TOP_MODULE)_tb.cpp
 ######################################################################
 
 comp: $(SIM_PROC)
@@ -66,9 +66,12 @@ $(SIM_PROC):
 #run the simulator
 exec:
 	./$(SIM_PROC)
+ifeq ($(VCD),1)
+	sed -i 's/TOP/iob_clint_tb/g' *.vcd
+endif
 
 clean: clean-remote
 	@rm -f $(SIM_PROC)
 	@rm -rf obj_dir
 
-.PHONY: exec clean
+.PHONY: comp exec clean

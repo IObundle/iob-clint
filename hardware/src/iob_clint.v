@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module clint
+module iob_clint
   #(
     parameter ADDR_W  = 16,
     parameter DATA_W  = 32,
@@ -23,12 +23,12 @@ module clint
     output reg [N_CORES-1:0] msip     // Machine software interrupt (a.k.a inter-process-interrupt)
     );
 
-/*`ifdef CLINT_VCD
+`ifdef VCD
    initial begin
-      $dumpfile("system.vcd");
+      $dumpfile("iob_clint.vcd");
       $dumpvars();
    end
-`endif*/
+`endif
 
    // NEED to generate a real time clock -> input  rt_clk, // Real-time clock in (usually 32.768 kHz)
    localparam AddrSelWidth = (N_CORES == 1) ? 1 : $clog2(N_CORES);
@@ -88,7 +88,6 @@ module clint
 
    // Machine-level Timer Device (MTIMER)
    reg [63:0]        mtimecmp [N_CORES-1:0];
-
    integer           k, c;
    always @* begin
       if (rst)
@@ -104,7 +103,7 @@ module clint
    // mtimecmp
    always @(posedge clk, posedge rst) begin
       if (rst) begin
-         for (c=0; c<N_CORES; c=c+1) begin
+         for (c=0; c < N_CORES; c=c+1) begin
             mtimecmp[c] <= {64{1'b1}};
          end
       end else if (valid && write && (address >= MTIMECMP_BASE) && (address < (MTIMECMP_BASE+8*N_CORES))) begin
@@ -113,6 +112,7 @@ module clint
    end
 
    // mtime
+   reg [63:0]        mtime;
    always @(posedge clk, posedge rst) begin
       if (rst) begin
          mtime <= {64{1'b0}};

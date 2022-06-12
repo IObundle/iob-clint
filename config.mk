@@ -1,22 +1,24 @@
 ######################################################################
 #
-# MyCLINT Configuration File
+# CLINT Configuration File
 #
 ######################################################################
 
-MYCLINT_NAME:=MyCLINT
+SHELL = /bin/bash
+
+TOP_MODULE:=iob_clint
 
 #
 # PRIMARY PARAMETERS: CAN BE CHANGED BY USERS OR OVERRIDEN BY ENV VARS
 #
 
 #CPU ARCHITECTURE
-DATA_W ?= 32
-ADDR_W ?= 32
-N_CORES ?= 1
+DATA_W ?=32
+ADDR_W ?=16
+N_CORES ?=1
 
 #CLINT DIRECTORY ON REMOTE MACHINES
-REMOTE_CLINT_DIR ?=sandbox/myclint
+REMOTE_CLINT_DIR ?=sandbox/iob_clint
 
 #SIMULATION
 #default simulator running locally or remotely
@@ -38,8 +40,6 @@ CLINT_SIM_DIR=$(CLINT_HW_DIR)/simulation/$(SIMULATOR)
 #default baud and system clock freq
 BAUD ?= 5000000
 FREQ ?= 100000000
-
-SHELL = /bin/bash
 
 #RULES
 clint_gen_clean:
