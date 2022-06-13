@@ -23,13 +23,6 @@ module iob_clint
     output reg [N_CORES-1:0] msip     // Machine software interrupt (a.k.a inter-process-interrupt)
     );
 
-`ifdef VCD
-   initial begin
-      $dumpfile("iob_clint.vcd");
-      $dumpvars();
-   end
-`endif
-
    // NEED to generate a real time clock -> input  rt_clk, // Real-time clock in (usually 32.768 kHz)
    localparam AddrSelWidth = (N_CORES == 1) ? 1 : $clog2(N_CORES);
    // register offset, base address are Backward Compatible With SiFive CLINT

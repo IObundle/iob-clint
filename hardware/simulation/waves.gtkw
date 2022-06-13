@@ -1,16 +1,17 @@
 [*]
 [*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
-[*] Sun Jun 12 10:29:54 2022
+[*] Mon Jun 13 08:29:21 2022
 [*]
 [dumpfile] "/home/jdlopes/git/iob-soc-vexriscv/submodules/CLINT/hardware/simulation/icarus/iob_clint.vcd"
-[dumpfile_mtime] "Sun Jun 12 10:22:48 2022"
-[dumpfile_size] 20015888
+[dumpfile_mtime] "Mon Jun 13 08:28:17 2022"
+[dumpfile_size] 20016664
 [savefile] "/home/jdlopes/git/iob-soc-vexriscv/submodules/CLINT/hardware/simulation/waves.gtkw"
-[timestart] 0
+[timestart] 579743200
 [size] 2560 1376
 [pos] 0 0
-*-28.164192 1190210000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-15.164192 579860000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] iob_clint_tb.
+[treeopen] iob_clint_tb.clint_top.
 [sst_width] 228
 [signals_width] 252
 [sst_expanded] 1
@@ -52,13 +53,13 @@ iob_clint_tb.timer_read[63:0]
 -
 -Clint
 @28
-iob_clint_tb.clint.mtip
-iob_clint_tb.clint.msip
+iob_clint_tb.clint_top.clint.mtip
+iob_clint_tb.clint_top.clint.msip
 @200
 -
 @28
-iob_clint_tb.clint.increment_timer
+iob_clint_tb.clint_top.clint.increment_timer
 @22
-iob_clint_tb.clint.mtime[63:0]
+iob_clint_tb.clint_top.clint.mtime[63:0]
 [pattern_trace] 1
 [pattern_trace] 0

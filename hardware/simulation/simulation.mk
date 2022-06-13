@@ -24,6 +24,9 @@ DEFINE+=$(defmacro)DATA_W=$(DATA_W)
 DEFINE+=$(defmacro)ADDR_W=$(ADDR_W)
 DEFINE+=$(defmacro)N_CORES=$(N_CORES)
 
+#testbench sources
+VSRC+=$(CLINT_DIR)/hardware/simulation/testbench/iob_clint_top.v
+
 #RULES
 build: $(VSRC) $(VHDR)
 ifeq ($(SIM_SERVER),)
@@ -36,7 +39,7 @@ endif
 
 run: sim
 ifeq ($(VCD),1)
-	if [ "`pgrep -u $(USER) gtkwave`" ]; then gtkwave -a ../waves.gtkw iob_clint.vcd; fi &
+	if [ ! "`pgrep -u $(USER) gtkwave`" ]; then gtkwave -a ../waves.gtkw iob_clint.vcd; fi &
 endif
 
 sim:

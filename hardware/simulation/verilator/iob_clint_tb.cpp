@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "Viob_clint.h"
+#include "Viob_clint_top.h"
 #include "verilated.h"
 #include "verilated_vcd_c.h"
 
@@ -15,7 +15,7 @@
 
 vluint64_t main_time = 0;
 VerilatedVcdC* tfp = NULL;
-Viob_clint* dut = NULL;
+Viob_clint_top* dut = NULL;
 
 double sc_time_stamp(){
   return main_time;
@@ -27,7 +27,7 @@ void Timer(unsigned int ns){
       dut->clk = !(dut->clk);
     }
     if(!(main_time%(RTC_PERIOD/2))){
-      dut->rt_clk = !(dut->rt_clk);
+      dut->rtc = !(dut->rtc);
     }
     dut->eval();
 #ifdef VCD
@@ -66,7 +66,7 @@ vluint64_t get_time(){
 int main(int argc, char **argv, char **env){
   Verilated::commandArgs(argc, argv);
   Verilated::traceEverOn(true);
-  dut = new Viob_clint;
+  dut = new Viob_clint_top;
 
 #ifdef VCD
   tfp = new VerilatedVcdC;
@@ -77,7 +77,7 @@ int main(int argc, char **argv, char **env){
   main_time = 0;
 
   dut->clk = 0;
-  dut->rt_clk = 0;
+  dut->rtc = 0;
   dut->rst = 0;
   dut->valid = 0;
   dut->address = 0;

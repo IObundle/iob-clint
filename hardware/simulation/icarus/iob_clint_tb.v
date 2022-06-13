@@ -34,10 +34,7 @@ module iob_clint_tb;
    reg [63:0]          timer_read;
 
    initial begin
-`ifdef VCD
-      $dumpfile("iob_clint.vcd");
-      $dumpvars();
-`endif
+
       //assert reset
       #100 rst = 1;
       valid = 0;
@@ -75,12 +72,12 @@ module iob_clint_tb;
       end
    end
 
-   iob_clint clint
+   iob_clint_top clint_top
      (
       .clk     (clk),
       .rst     (rst),
 
-      .rt_clk  (rtc),
+      .rtc     (rtc),
 
       .valid   (valid),
       .address (address),
