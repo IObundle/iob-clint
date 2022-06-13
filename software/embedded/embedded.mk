@@ -5,4 +5,7 @@ SW_MODULES+=CLINT
 
 include $(CLINT_DIR)/software/software.mk
 
+#embeded sources
+SRC+=$(CLINT_SW_DIR)/embedded/iob_clint.c
+
 endif

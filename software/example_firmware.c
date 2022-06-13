@@ -3,12 +3,12 @@
 #include "system.h"
 #include "periphs.h"
 #include "iob-uart.h"
-#include "myclint.h"
+#include "iob_clint.h"
 #include "printf.h"
 
 #include "riscv-csr.h"
 #include "riscv-interrupts.h"
-#include "timer.h"
+#include "iob_clint_timer.h"
 
 // Machine mode interrupt service routine
 static void irq_entry(void) __attribute__ ((interrupt ("machine")));

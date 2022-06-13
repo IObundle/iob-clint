@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "Vmyclint.h"
+#include "Viob_clint_top.h"
 #include "verilated.h"
 #include "verilated_vcd_c.h"
 
@@ -15,7 +15,7 @@
 
 vluint64_t main_time = 0;
 VerilatedVcdC* tfp = NULL;
-Vmyclint* dut = NULL;
+Viob_clint_top* dut = NULL;
 
 double sc_time_stamp(){
   return main_time;
@@ -27,7 +27,7 @@ void Timer(unsigned int ns){
       dut->clk = !(dut->clk);
     }
     if(!(main_time%(RTC_PERIOD/2))){
-      dut->rt_clk = !(dut->rt_clk);
+      dut->rtc = !(dut->rtc);
     }
     dut->eval();
 #ifdef VCD
@@ -66,19 +66,19 @@ vluint64_t get_time(){
 int main(int argc, char **argv, char **env){
   Verilated::commandArgs(argc, argv);
   Verilated::traceEverOn(true);
-  dut = new Vmyclint;
+  dut = new Viob_clint_top;
 
 #ifdef VCD
   tfp = new VerilatedVcdC;
 
   dut->trace(tfp, 1);
-  tfp->open("system.vcd");
+  tfp->open("iob_clint.vcd");
 #endif
   main_time = 0;
 
   dut->clk = 0;
-  dut->rt_clk = 0;
-  dut->reset = 0;
+  dut->rtc = 0;
+  dut->rst = 0;
   dut->valid = 0;
   dut->address = 0;
   dut->wdata = 0;
@@ -91,9 +91,9 @@ int main(int argc, char **argv, char **env){
 
   // Reset sequence
   Timer(CLK_PERIOD);
-  dut->reset = !(dut->reset);
+  dut->rst = !(dut->rst);
   Timer(CLK_PERIOD);
-  dut->reset = !(dut->reset);
+  dut->rst = !(dut->rst);
 
   // set timer compare Register
   // set_inputs(address, data, strb);

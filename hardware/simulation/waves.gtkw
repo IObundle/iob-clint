@@ -1,49 +1,65 @@
 [*]
-[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
-[*] Mon May  2 22:56:34 2022
+[*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
+[*] Mon Jun 13 08:29:21 2022
 [*]
-[dumpfile] "/media/data/Documentos/Tese/SoC/iob-soc-vexriscv/submodules/CLINT/hardware/simulation/icarus/system.vcd"
-[dumpfile_mtime] "Mon May  2 22:53:01 2022"
-[dumpfile_size] 20014709
-[savefile] "/media/data/Documentos/Tese/SoC/iob-soc-vexriscv/submodules/CLINT/hardware/simulation/waves.gtkw"
-[timestart] 0
-[size] 1920 1002
-[pos] 3 0
-*-24.000000 9870 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
-[treeopen] system_tb.
-[sst_width] 211
+[dumpfile] "/home/jdlopes/git/iob-soc-vexriscv/submodules/CLINT/hardware/simulation/icarus/iob_clint.vcd"
+[dumpfile_mtime] "Mon Jun 13 08:28:17 2022"
+[dumpfile_size] 20016664
+[savefile] "/home/jdlopes/git/iob-soc-vexriscv/submodules/CLINT/hardware/simulation/waves.gtkw"
+[timestart] 579743200
+[size] 2560 1376
+[pos] 0 0
+*-15.164192 579860000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] iob_clint_tb.
+[treeopen] iob_clint_tb.clint_top.
+[sst_width] 228
 [signals_width] 252
 [sst_expanded] 1
-[sst_vpaned_height] 283
+[sst_vpaned_height] 414
 @200
 -Testbench
-@22
-system_tb.address[31:0]
 @28
-system_tb.clk
-@420
-system_tb.i
-@28
-system_tb.msip
-system_tb.mtip
-@22
-system_tb.rdata[31:0]
-@28
-system_tb.ready
-system_tb.reset
-system_tb.rtc
-@22
-system_tb.timer_read[63:0]
-@28
-system_tb.valid
-@22
-system_tb.wdata[31:0]
-system_tb.wstrb[3:0]
+iob_clint_tb.clk
+iob_clint_tb.rst
 @200
--Input data
--Output
--Interupts
 -
--MyClint
+@28
+iob_clint_tb.rtc
+@200
+-
+@420
+iob_clint_tb.i
+@200
+-
+@28
+iob_clint_tb.msip
+iob_clint_tb.mtip
+@200
+-
+@28
+iob_clint_tb.valid
+@22
+iob_clint_tb.address[15:0]
+iob_clint_tb.wstrb[3:0]
+iob_clint_tb.wdata[31:0]
+iob_clint_tb.rdata[31:0]
+@200
+-
+@28
+iob_clint_tb.ready
+@22
+iob_clint_tb.timer_read[63:0]
+@200
+-
+-Clint
+@28
+iob_clint_tb.clint_top.clint.mtip
+iob_clint_tb.clint_top.clint.msip
+@200
+-
+@28
+iob_clint_tb.clint_top.clint.increment_timer
+@22
+iob_clint_tb.clint_top.clint.mtime[63:0]
 [pattern_trace] 1
 [pattern_trace] 0

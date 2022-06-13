@@ -14,8 +14,7 @@ DEFINE+=$(defmacro)RTC_FREQ=$(RTC_FREQ)
 VCD ?=0
 
 ifeq ($(VCD),1)
-CLINT_VCD = 1
-DEFINE+=$(defmacro)CLINT_VCD
+DEFINE+=$(defmacro)VCD
 endif
 
 include $(CLINT_DIR)/hardware/hardware.mk
@@ -24,6 +23,9 @@ include $(CLINT_DIR)/hardware/hardware.mk
 DEFINE+=$(defmacro)DATA_W=$(DATA_W)
 DEFINE+=$(defmacro)ADDR_W=$(ADDR_W)
 DEFINE+=$(defmacro)N_CORES=$(N_CORES)
+
+#testbench sources
+VSRC+=$(CLINT_DIR)/hardware/simulation/testbench/iob_clint_top.v
 
 #RULES
 build: $(VSRC) $(VHDR)
@@ -35,7 +37,12 @@ else
 	bash -c "trap 'make kill-remote-sim' INT TERM KILL; ssh $(SIM_SSH_FLAGS) $(SIM_USER)@$(SIM_SERVER) 'make -C $(REMOTE_CLINT_DIR) sim-build SIMULATOR=$(SIMULATOR) INIT_MEM=$(INIT_MEM) USE_DDR=$(USE_DDR) RUN_EXTMEM=$(RUN_EXTMEM) VCD=$(VCD) TEST_LOG=\"$(TEST_LOG)\"'"
 endif
 
-run:
+run: sim
+ifeq ($(VCD),1)
+	if [ ! "`pgrep -u $(USER) gtkwave`" ]; then gtkwave -a ../waves.gtkw iob_clint.vcd; fi &
+endif
+
+sim:
 ifeq ($(SIM_SERVER),)
 	bash -c "make exec"
 else
@@ -49,22 +56,17 @@ ifeq ($(VCD),1)
 	scp $(SIM_USER)@$(SIM_SERVER):$(REMOTE_CLINT_DIR)/hardware/simulation/$(SIMULATOR)/*.vcd $(CLINT_SIM_DIR)
 endif
 endif
-ifeq ($(VCD),1)
-	if [ "`pgrep -u $(USER) gtkwave`" ]; then killall -q -9 gtkwave; fi
-	gtkwave -a ../waves.gtkw system.vcd &
-endif
 
 #clean target common to all simulators
 clean-remote: clint_hw_clean
-	@rm -f soc2cnsl cnsl2soc
-	@rm -f system.vcd
+	@rm -f iob_clint.vcd
 ifneq ($(SIM_SERVER),)
 	ssh $(SIM_SSH_FLAGS) $(SIM_USER)@$(SIM_SERVER) "if [ ! -d $(REMOTE_CLINT_DIR) ]; then mkdir -p $(REMOTE_CLINT_DIR); fi"
 	rsync -avz --delete --force --exclude .git $(SIM_SYNC_FLAGS) $(CLINT_DIR) $(SIM_USER)@$(SIM_SERVER):$(REMOTE_CLINT_DIR)
 	ssh $(SIM_SSH_FLAGS) $(SIM_USER)@$(SIM_SERVER) 'make -C $(REMOTE_CLINT_DIR) sim-clean SIMULATOR=$(SIMULATOR)'
 endif
 
-.PRECIOUS: system.vcd test.log
+.PRECIOUS: iob_clint.vcd
 
-.PHONY: build run \
+.PHONY: build run sim \
 	kill-remote-sim clean-remote kill-sim
