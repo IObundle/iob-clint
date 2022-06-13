@@ -30,7 +30,7 @@ SIMULATOR ?=icarus
 ####################################################################
 
 #sw paths
-CLINT_SW_DIR:=$(CLINT_DIR)/software
+CLINT_SW_DIR=$(CLINT_DIR)/software
 
 #hw paths
 CLINT_HW_DIR=$(CLINT_DIR)/hardware
