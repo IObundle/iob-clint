@@ -34,7 +34,6 @@ module iob_clint_tb;
    reg [63:0]          timer_read;
 
    initial begin
-
       //assert reset
       #100 rst = 1;
       valid = 0;
@@ -46,23 +45,28 @@ module iob_clint_tb;
       // deassert rst
       repeat (100) @(posedge clk) #1;
       rst = 0;
-
       //wait an arbitray (10) number of cycles
       repeat (10) @(posedge clk) #1;
-      set_inputs(`MTIMECMP_BASE, 20, 15, timer_read[31:0]);
-      set_inputs(`MTIMECMP_BASE+4, 0, 15, timer_read[31:0]);
+      set_inputs(`MTIMECMP_BASE, 20, 15);
+      wait_responce(timer_read[31:0]);
+      set_inputs(`MTIMECMP_BASE+4, 0, 15);
+      wait_responce(timer_read[31:0]);
       while (1) begin
          if (mtip > 0) begin
             $display("Machine Timer Interrupt is trigered.");
-            set_inputs(`MSIP_BASE, 1, 15, timer_read[31:0]);
+            set_inputs(`MSIP_BASE, 1, 15);
+            wait_responce(timer_read[31:0]);
          end
          if (msip > 0) begin
             $display("Machine Software Interrupt is trigered.");
-            set_inputs(`MSIP_BASE, 0, 15, timer_read[31:0]);
+            set_inputs(`MSIP_BASE, 0, 15);#1
+            wait_responce(timer_read[31:0]);
             get_time(timer_read);
             $display("Timer count: %0d.", timer_read);
-            set_inputs(`MTIME_BASE, 0, 15, timer_read[31:0]);
-            set_inputs(`MTIMECMP_BASE, rtc_per*100, 4'hF, timer_read[31:0]);
+            set_inputs(`MTIME_BASE, 0, 15);#1
+            wait_responce(timer_read[31:0]);
+            set_inputs(`MTIMECMP_BASE, rtc_per*100, 4'hF);
+            wait_responce(timer_read[31:0]);
          end
          @(posedge clk) #1 i = i + clk_per;
          if (i > rtc_per*100) begin
@@ -93,9 +97,10 @@ module iob_clint_tb;
    task wait_responce;
       output [31:0] data_read;
       begin
-         data_read = 0;
-         while(ready != 1)
-           @ (posedge clk) #1 data_read = rdata;
+         data_read = rdata;
+         while(ready != 1) begin
+           @ (posedge clk) data_read = rdata;
+          end
       end
    endtask
 
@@ -103,16 +108,13 @@ module iob_clint_tb;
       input [31:0]  set_address;
       input [31:0]  set_data;
       input [3:0]   set_strb;
-      output [31:0] data_read;
       begin
          valid = 1;
-         data_read = 0;
          address = set_address;
          wdata = set_data;
          wstrb = set_strb;
          @ (posedge clk) #1 valid = 0;
          wstrb = 0;
-         wait_responce(data_read);
       end
    endtask
 
@@ -120,8 +122,10 @@ module iob_clint_tb;
       output [63:0] read_time;
       begin
          read_time = 0;
-         set_inputs(`MTIME_BASE, 0, 0, read_time[31:0]);
-         set_inputs(`MTIME_BASE+4, 0, 0, read_time[63:32]);
+         set_inputs(`MTIME_BASE, 0, 0);
+         wait_responce(read_time[31:0]);
+         set_inputs(`MTIME_BASE+4, 0, 0);
+         wait_responce(read_time[63:32]);
       end
    endtask
 
