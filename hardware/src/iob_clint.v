@@ -33,7 +33,7 @@ module iob_clint
    wire                     write = |wstrb;
 
    // Address decoder
-   always @* begin
+   always @ ( address ) begin
       if (address < MTIMECMP_BASE) begin
          rdata = {{(DATA_W-1){1'b0}}, msip[address[AddrSelWidth+1:2]]};
       end else if (address < MTIME_BASE) begin
