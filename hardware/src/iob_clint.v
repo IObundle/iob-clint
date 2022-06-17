@@ -33,13 +33,15 @@ module iob_clint
    wire                     write = |wstrb;
 
    // Address decoder
-   always @ ( address ) begin
-      if (address < MTIMECMP_BASE) begin
-         rdata = {{(DATA_W-1){1'b0}}, msip[address[AddrSelWidth+1:2]]};
+   always @ ( posedge clk, posedge rst ) begin
+      if (rst) begin
+         rdata <= {(DATA_W){1'b0}};
+      end else if (address < MTIMECMP_BASE) begin
+         rdata <= {{(DATA_W-1){1'b0}}, msip[address[AddrSelWidth+1:2]]};
       end else if (address < MTIME_BASE) begin
-         rdata = mtimecmp[address[AddrSelWidth+2:3]][(address[2]+1)*DATA_W-1 -: DATA_W];
+         rdata <= mtimecmp[address[AddrSelWidth+2:3]][(address[2]+1)*DATA_W-1 -: DATA_W];
       end else begin
-         rdata = mtime[(address[2]+1)*DATA_W-1 -: DATA_W];
+         rdata <= mtime[(address[2]+1)*DATA_W-1 -: DATA_W];
       end
    end
 
@@ -82,7 +84,7 @@ module iob_clint
    // Machine-level Timer Device (MTIMER)
    reg [63:0]        mtimecmp [N_CORES-1:0];
    integer           k, c;
-   always @* begin
+   always @( * ) begin
       if (rst)
         for (k=0; k < N_CORES; k=k+1) begin
            mtip[k] = {1'b0};
