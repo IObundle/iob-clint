@@ -3,7 +3,7 @@
 #default freq and real time clock freq for simulation
 BAUD ?=5000000
 FREQ ?=100000000
-RTC_FREQ ?=32768
+RTC_FREQ ?=100000
 
 #define for testbench
 DEFINE+=$(defmacro)BAUD=$(BAUD)
