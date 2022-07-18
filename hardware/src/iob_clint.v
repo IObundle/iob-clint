@@ -48,38 +48,55 @@ module iob_clint
    // ready
    always @(posedge clk, posedge rst) begin
       if (rst) begin
-         ready <= 1'b0;
+        ready <= 1'b0;
       end else begin
-         ready <= valid;
+        ready <= valid;
       end
    end
+
+
+   reg	[9:0]	counter;
+   always @(posedge clk, posedge rst)
+      if (rst) begin
+        counter <= 1'b0;
+      end else if (counter < 999)
+   		  counter <= counter + 1'b1;
+     	else
+     		counter <= 0;
+
+   reg increment_timer;
+   always @(posedge clk, posedge rst)
+      if (rst) begin
+        increment_timer <= 1'b0;
+      end else increment_timer <= (counter == 999);
+
 
    // Real Time Clock and Device Clock Synconizer, in order to minimize meta stability
-   localparam STAGES = 2;
+   //localparam STAGES = 2;
 
-   wire rtc_value;
-   reg  rtc_previous;
-   reg [STAGES-1:0] rtc_states;
+   //wire rtc_value;
+   //reg  rtc_previous;
+   //reg [STAGES-1:0] rtc_states;
 
-   wire increment_timer = rtc_value & ~rtc_previous; // detects rising edge
-   assign rtc_value = rtc_states[STAGES-1];
+   //wire increment_timer = rtc_value & ~rtc_previous; // detects rising edge
+   //assign rtc_value = rtc_states[STAGES-1];
 
-   // Sync rt clk with clk
-   always @(posedge clk, posedge rst) begin
-      if (rst) begin
-         rtc_states <= {STAGES{1'b0}};
-      end else begin
-         rtc_states <= {rtc_states[STAGES-2:0], rt_clk};
-      end
-   end
+   //// Sync rt clk with clk
+   //always @(posedge clk, posedge rst) begin
+   //   if (rst) begin
+   //      rtc_states <= {STAGES{1'b0}};
+   //   end else begin
+   //      rtc_states <= {rtc_states[STAGES-2:0], rt_clk};
+   //   end
+   //end
 
-   always @(posedge clk, posedge rst) begin
-      if (rst) begin
-         rtc_previous <= 1'b0;
-      end else begin
-         rtc_previous <= rtc_value;
-      end
-   end
+   //always @(posedge clk, posedge rst) begin
+   //   if (rst) begin
+   //      rtc_previous <= 1'b0;
+   //   end else begin
+   //      rtc_previous <= rtc_value;
+   //   end
+   //end
 
    // Machine-level Timer Device (MTIMER)
    reg [63:0]        mtimecmp [N_CORES-1:0];
