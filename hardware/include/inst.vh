@@ -9,7 +9,7 @@
       .clk     (clk),
       .rst     (reset),
 
-      .rt_clk  (rtc),
+      .rt_clk  (1'b0),
 
       .valid   (slaves_req[`valid(`CLINT)]),
       .address (slaves_req[`address(`CLINT, `iob_clint_ADDR_W)]),
