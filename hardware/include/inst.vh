@@ -7,7 +7,7 @@
    iob_clint clint
      (
       .clk     (clk),
-      .rst     (reset),
+      .rst     (cpu_reset),
 
       .rt_clk  (1'b0),
 
