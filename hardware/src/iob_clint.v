@@ -59,7 +59,7 @@ module iob_clint
    always @(posedge clk, posedge rst)
       if (rst) begin
         counter <= 1'b0;
-      end else if (counter < 999)
+      end else if (counter < `FREQ/100000-1)
    		  counter <= counter + 1'b1;
      	else
      		counter <= 0;
@@ -68,7 +68,7 @@ module iob_clint
    always @(posedge clk, posedge rst)
       if (rst) begin
         increment_timer <= 1'b0;
-      end else increment_timer <= (counter == 999);
+      end else increment_timer <= (counter == `FREQ/100000-1);
 
 
    // Real Time Clock and Device Clock Synconizer, in order to minimize meta stability
