@@ -106,14 +106,14 @@ int main(int argc, char **argv, char **env){
     if(dut->mtip > 0){
         printf("Machine Timer Interrupt is trigered\n");
         set_inputs(MSIP_BASE, 1, 15);
-    }
-    if(dut->msip > 0){
-        printf("Machine Software Interrupt is trigered\n");
-        set_inputs(MSIP_BASE, 0, 15);
         read_time = get_time();
         printf("Timer count: %ld\n", read_time);
         set_inputs(MTIME_BASE, 0, 15);
         set_inputs(MTIMECMP_BASE, RTC_PERIOD*100, 15);
+    }
+    if(dut->msip > 0){
+        printf("Machine Software Interrupt is trigered\n");
+        set_inputs(MSIP_BASE, 0, 15);
     }
     Timer(CLK_PERIOD);
     if (main_time>RTC_PERIOD*100) break;
