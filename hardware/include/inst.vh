@@ -7,9 +7,9 @@
    iob_clint clint
      (
       .clk     (clk),
-      .rst     (reset),
+      .rst     (cpu_reset),
 
-      .rt_clk  (rtc),
+      .rt_clk  (1'b0),
 
       .valid   (slaves_req[`valid(`CLINT)]),
       .address (slaves_req[`address(`CLINT, `iob_clint_ADDR_W)]),

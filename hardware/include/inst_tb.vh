@@ -1,1 +1,1 @@
-assign rtc = rtc_in;
+assign rtc = 1'b0;

@@ -56,16 +56,16 @@ module iob_clint_tb;
             $display("Machine Timer Interrupt is trigered.");
             set_inputs(`MSIP_BASE, 1, 15);
             wait_responce(timer_read[31:0]);
-         end
-         if (msip > 0) begin
-            $display("Machine Software Interrupt is trigered.");
-            set_inputs(`MSIP_BASE, 0, 15);#1
-            wait_responce(timer_read[31:0]);
             get_time(timer_read);
             $display("Timer count: %0d.", timer_read);
             set_inputs(`MTIME_BASE, 0, 15);#1
             wait_responce(timer_read[31:0]);
             set_inputs(`MTIMECMP_BASE, rtc_per*100, 4'hF);
+            wait_responce(timer_read[31:0]);
+         end
+         if (msip > 0) begin
+            $display("Machine Software Interrupt is trigered.");
+            set_inputs(`MSIP_BASE, 0, 15);#1
             wait_responce(timer_read[31:0]);
          end
          @(posedge clk) #1 i = i + clk_per;
