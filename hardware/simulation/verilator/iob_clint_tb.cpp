@@ -97,8 +97,9 @@ int main(int argc, char **argv, char **env){
 
   // set timer compare Register
   // set_inputs(address, data, strb);
-  set_inputs(MTIMECMP_BASE, 20, 15);
-  set_inputs(MTIMECMP_BASE+4, 0, 15);
+  set_inputs(MTIMECMP_BASE, 10000, 15);
+  set_inputs(MTIMECMP_BASE+4,   0, 15);
+  printf("Timer Interrupt is set.\n");
 
   vluint64_t read_time = 0;
 
@@ -116,7 +117,7 @@ int main(int argc, char **argv, char **env){
         set_inputs(MSIP_BASE, 0, 15);
     }
     Timer(CLK_PERIOD);
-    if (main_time>RTC_PERIOD*100) break;
+    if (main_time>RTC_PERIOD*10050) break;
   }
   Timer(CLK_PERIOD);
 

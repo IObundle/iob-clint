@@ -19,7 +19,7 @@
 #define RISCV_MTIMECMP_ADDR (CLINT_BASE + 0x4000)
 #define RISCV_MTIME_ADDR    (CLINT_BASE + 0xBFF8)
 
-#define MTIME_FREQ_HZ 32768
+#define MTIME_FREQ_HZ 100000
 
 #define MTIMER_SECONDS_TO_CLOCKS(SEC)           \
     ((uint64_t)(((SEC)*(MTIME_FREQ_HZ))))

@@ -47,10 +47,11 @@ module iob_clint_tb;
       rst = 0;
       //wait an arbitray (10) number of cycles
       repeat (10) @(posedge clk) #1;
-      set_inputs(`MTIMECMP_BASE, 20, 15);
+      set_inputs(`MTIMECMP_BASE, 200, 15);
       wait_responce(timer_read[31:0]);
       set_inputs(`MTIMECMP_BASE+4, 0, 15);
       wait_responce(timer_read[31:0]);
+      $display("Timer Interrupt set.");
       while (1) begin
          if (mtip > 0) begin
             $display("Machine Timer Interrupt is trigered.");
@@ -69,7 +70,7 @@ module iob_clint_tb;
             wait_responce(timer_read[31:0]);
          end
          @(posedge clk) #1 i = i + clk_per;
-         if (i > rtc_per*100) begin
+         if (i > rtc_per*250) begin
             @(posedge clk) #1 $display("Testbench finished!");
             $finish;
          end
