@@ -40,6 +40,7 @@ CLINT_SIM_DIR=$(CLINT_HW_DIR)/simulation/$(SIMULATOR)
 #default baud and system clock freq
 BAUD ?= 5000000
 FREQ ?= 100000000
+DEFINE+=$(defmacro)FREQ=$(FREQ)
 
 #RULES
 clint_gen_clean:

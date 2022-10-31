@@ -12,7 +12,7 @@
       .rt_clk  (1'b0),
 
       .valid   (slaves_req[`valid(`CLINT)]),
-      .address (slaves_req[`address(`CLINT, `iob_clint_ADDR_W)]),
+      .address (slaves_req[`address(`CLINT, 16)]),
       .wdata   (slaves_req[`wdata(`CLINT)]),
       .wstrb   (slaves_req[`wstrb(`CLINT)]),
       .rdata   (slaves_resp[`rdata(`CLINT)]),

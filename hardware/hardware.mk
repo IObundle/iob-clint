@@ -17,9 +17,6 @@ VHDR+=$(wildcard $(CLINT_INC_DIR)/*.vh)
 #sources
 VSRC+=$(wildcard $(CLINT_SRC_DIR)/*.v)
 
-iob_clint_swreg_def.vh: $(CLINT_INC_DIR)/iob_clint_swreg.vh
-	cp $(CLINT_INC_DIR)/iob_clint_swreg_def.vh ./iob_clint_swreg_def.vh
-
 #clean general hardware files
 clint_hw_clean: clint_gen_clean
 	@rm -f *.vh
