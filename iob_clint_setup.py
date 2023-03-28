@@ -12,7 +12,7 @@ if setup.is_top_module(sys.modules[__name__]):
     build_dir=f"../{name}_{version}"
 submodules = {
     'hw_setup': {
-        'headers' : [ 'iob_s_port', 'iob_s_portmap' ],
+        'headers' : [ 'iob_s_port', 'iob_s_portmap', 'iob_wire' ],
         'modules': [  ]
     },
 }

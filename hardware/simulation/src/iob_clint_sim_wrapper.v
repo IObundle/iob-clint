@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module iob_clint_top #(
+module iob_clint_sim_wrapper #(
     parameter ADDR_W  = 16,
     parameter DATA_W  = 32,
     parameter N_CORES = 1

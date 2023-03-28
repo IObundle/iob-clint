@@ -76,7 +76,7 @@ module iob_clint_tb;
       end
    end
 
-   iob_clint_top clint_top
+   iob_clint_sim_wrapper clint_sim_wrapper
      (
       .clk_i  (clk_i),
       .arst_i (arst_i),
