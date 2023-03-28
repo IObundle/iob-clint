@@ -38,19 +38,19 @@ void Timer(unsigned int ns){
 }
 
 int wait_responce(){
-  while(dut->ready != 1){
+  while(dut->iob_ready != 1){
     Timer(CLK_PERIOD);
   }
-  return dut->rdata;
+  return dut->iob_rdata;
 }
 
 int set_inputs(int address, int data, int strb){
-  dut->valid = 1;
-  dut->address = address;
-  dut->wdata = data;
-  dut->wstrb = strb;
+  dut->iob_avalid = 1;
+  dut->iob_addr = address;
+  dut->iob_wdata = data;
+  dut->iob_wstrb = strb;
   Timer(CLK_PERIOD);
-  dut->valid = 0;
+  dut->iob_avalid = 0;
   return wait_responce();
 }
 
@@ -79,10 +79,10 @@ int main(int argc, char **argv, char **env){
   dut->clk = 0;
   dut->rtc = 0;
   dut->rst = 0;
-  dut->valid = 0;
-  dut->address = 0;
-  dut->wdata = 0;
-  dut->wstrb = 0;
+  dut->iob_avalid = 0;
+  dut->iob_addr = 0;
+  dut->iob_wdata = 0;
+  dut->iob_wstrb = 0;
 
   dut->eval();
 #ifdef VCD

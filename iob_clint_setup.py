@@ -20,7 +20,6 @@ submodules = {
 confs = \
 [
     # Macros
-    {'name':'FREQ',  'type':'P', 'val':'100000000', 'min':'NA', 'max':'NA', 'descr':"Data bus width"},
 
     # Parameters
     {'name':'DATA_W',  'type':'P', 'val':'32', 'min':'NA', 'max':'NA', 'descr':"Data bus width"},
@@ -40,8 +39,8 @@ ios = \
     {'name': 'clint_io', 'descr':'CLINT specific IO.', 'ports': [
         #{'name':'interrupt', 'type':'O', 'n_bits':'1', 'descr':'be done'},
         {'name':'rt_clk', 'type':'I', 'n_bits':'1', 'descr':'Real Time clock input if available (usually 32.768 kHz)'},
-        {'name':'mtip',   'type':'O', 'n_bits':'N_CORES-1', 'descr':'Machine timer interrupt pin'},
-        {'name':'msip',   'type':'O', 'n_bits':'N_CORES-1', 'descr':'Machine software interrupt (a.k.a inter-process-interrupt)'}
+        {'name':'mtip',   'type':'O', 'n_bits':'N_CORES', 'descr':'Machine timer interrupt pin'},
+        {'name':'msip',   'type':'O', 'n_bits':'N_CORES', 'descr':'Machine software interrupt (a.k.a inter-process-interrupt)'}
     ]}
 ]
 
