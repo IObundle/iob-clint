@@ -1,27 +1,12 @@
 `timescale 1ns / 1ps
+`include "iob_lib.vh"
+`include "iob_clint_conf.vh"
 
-module iob_clint
-  #(
-    parameter ADDR_W  = 16,
-    parameter DATA_W  = 32,
-    parameter N_CORES = 1
-    )
-   (
-    input                    clk,
-    input                    rst,
-
-    input                    rt_clk,  // Real-time clock in (usually 32.768 kHz)
-
-    input                    valid,
-    input [ADDR_W-1:0]       address,
-    input [DATA_W-1:0]       wdata,
-    input [DATA_W/8-1:0]     wstrb,
-    output reg [DATA_W-1:0]  rdata,
-    output reg               ready,
-
-    output reg [N_CORES-1:0] mtip,    // Machine timer interrupt pin
-    output reg [N_CORES-1:0] msip     // Machine software interrupt (a.k.a inter-process-interrupt)
-    );
+module iob_clint #(    
+   `include "iob_clint_params.vh"
+   ) (
+   `include "iob_clint_io.vh"
+   );
 
    // NEED to generate a real time clock -> input  rt_clk, // Real-time clock in (usually 32.768 kHz)
    localparam AddrSelWidth = (N_CORES == 1) ? 1 : $clog2(N_CORES);
