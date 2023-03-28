@@ -1,6 +1,15 @@
 # MyCLINT
 RISC-V Core Local Interrupt Controller (CLINT) written in Verilog. The initial focus is for it to work as a IOb-SoC-VexRiscv peripheral.
 
+## How to build the core w/ python-setup
+The python-setup workflow allows to automatically generate verilog components used by the projects core Verilog. It allows to create bus interfaces with ease and use existing Verilog modules. To use python-setup the project should have a *project*_setup.py file in the root directory. The main commands to use the python-setup workflow are:
+- `make setup`: creates a build directory in the projects parent directory.
+- `make clean`: removes the build directory.
+
+An example of cleaning a previous build, creating a new build and simulating the project is:
+- `make clean && make setup && make -C ../iob_clint_V0.10 sim-run`
+
+
 ## Simulation
 To simulate the CLINT unit the user can use both "icarus verilog" and "verilator". Simply run:
 ```
