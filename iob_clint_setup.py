@@ -44,7 +44,12 @@ ios = \
     ]}
 ]
 
-regs = []
+regs = [
+    {'name': 'dummy', 'descr':'Dummy registers to run register setup functions', 'regs': [
+        {'name':"DUMMY", 'type':"R", 'n_bits':1, 'rst_val':0, 'addr':-1, 'log2n_items':0, 'autologic':False, 'descr':"Dummy Register"},
+    ]}
+]
+
 blocks = []
 
 # Main function to setup this core and its components
