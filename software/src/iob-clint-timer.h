@@ -10,7 +10,6 @@
 #define TIMER_H
 
 #include <stdint.h>
-#include "iob_soc_periphs.h"
 
 // Define the CLINT_BASE if it was not already defined
 #ifndef CLINT_BASE
