@@ -36,6 +36,8 @@ module iob_clint_tb;
    wire    [ `IOB_CLINT_N_CORES-1:0] msip;
 
    integer                           i = 0;
+   integer                           fd = 0;
+   integer                           failed = 0;
    reg     [                   63:0] timer_read;
 
    initial begin
@@ -71,7 +73,14 @@ module iob_clint_tb;
          @(posedge clk_i) #1 i = i + clk_per;
          if (i > rtc_per * 250) begin
             @(posedge clk_i) #1 $display("Testbench finished!");
-            $finish;
+            fd = $fopen("test.log", "w");
+            if (!failed) begin
+               $fdisplay(fd, "Test passed!");
+            end else begin
+               $fdisplay(fd, "Test failed!");
+            end
+            $fclose(fd);
+            $finish();
          end
       end
    end

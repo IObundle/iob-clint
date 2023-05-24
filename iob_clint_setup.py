@@ -112,17 +112,40 @@ ios = [
 ]
 
 regs = [
-    {'name': 'dummy', 'descr':'Dummy registers to run register setup functions', 'regs': [
-        {'name':"DUMMY", 'type':"R", 'n_bits':1, 'rst_val':0, 'addr':-1, 'log2n_items':0, 'autologic':False, 'descr':"Dummy Register"},
-    ]}
+    {
+        "name": "dummy",
+        "descr": "Dummy registers to run register setup functions",
+        "regs": [
+            {
+                "name": "DUMMY",
+                "type": "R",
+                "n_bits": 1,
+                "rst_val": 0,
+                "addr": -1,
+                "log2n_items": 0,
+                "autologic": False,
+                "descr": "Dummy Register",
+            },
+        ],
+    }
 ]
 
 blocks = []
 
 
+def pos_build_remove_unused_files():
+    unused_files = [
+        "../iob_clint_V0.10/hardware/src/iob_clint_swreg_inst.vh",
+        "../iob_clint_V0.10/hardware/src/iob_clint_inst_params.vh",
+    ]
+    for file in unused_files:
+        os.remove(file)
+
+
 # Main function to setup this core and its components
 def main():
     setup.setup(sys.modules[__name__])
+    pos_build_remove_unused_files()
 
 
 if __name__ == "__main__":
