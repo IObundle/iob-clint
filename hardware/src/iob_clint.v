@@ -10,9 +10,9 @@
   However, for it to work alterations must be made to the module.
 */
 module iob_clint #(
-    `include "iob_clint_params.vh"
+   `include "iob_clint_params.vh"
 ) (
-    `include "iob_clint_io.vh"
+   `include "iob_clint_io.vh"
 );
 
    // Local parameters
@@ -139,8 +139,8 @@ module iob_clint #(
    // // Interface Registers
    // // // Read data valid
    iob_reg_re #(
-       .DATA_W (1),
-       .RST_VAL(0)
+      .DATA_W (1),
+      .RST_VAL(0)
    ) iob_reg_rvalid (
       .clk_i (clk_i),
       .arst_i(arst_i),
@@ -152,8 +152,8 @@ module iob_clint #(
    );
    // // // Ready signal, is always 1 since the read and write to the CLINT only take one clock cycle.
    iob_reg_re #(
-       .DATA_W (1),
-       .RST_VAL(0)
+      .DATA_W (1),
+      .RST_VAL(0)
    ) iob_reg_ready (
       .clk_i (clk_i),
       .arst_i(arst_i),
@@ -165,8 +165,8 @@ module iob_clint #(
    );
    // // Internal Registers
    iob_reg_re #(
-       .DATA_W (1),
-       .RST_VAL(0)
+      .DATA_W (1),
+      .RST_VAL(0)
    ) iob_reg_increment_timer (
       .clk_i (clk_i),
       .arst_i(arst_i),
@@ -178,8 +178,8 @@ module iob_clint #(
    );
    // counter
    iob_counter #(
-       .DATA_W (10),
-       .RST_VAL(0)
+      .DATA_W (10),
+      .RST_VAL(0)
    ) iob_counter_0 (
       .clk_i (clk_i),
       .arst_i(arst_i),
