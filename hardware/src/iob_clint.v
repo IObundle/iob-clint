@@ -10,9 +10,9 @@
   However, for it to work alterations must be made to the module.
 */
 module iob_clint #(
-   `include "iob_clint_params.vh"
+   `include "iob_clint_params.vs"
 ) (
-   `include "iob_clint_io.vh"
+   `include "iob_clint_io.vs"
 );
 
    // Local parameters
