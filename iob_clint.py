@@ -14,11 +14,12 @@ from iob_clkenrst_port import iob_clkenrst_port
 from iob_reg_re import iob_reg_re
 from iob_counter import iob_counter
 
+
 class iob_clint(iob_module):
     name = "iob_clint"
     version = "V0.10"
     flows = "sim emb"
-    setup_dir=os.path.dirname(__file__)
+    setup_dir = os.path.dirname(__file__)
 
     @classmethod
     def _run_setup(cls):
@@ -47,38 +48,38 @@ class iob_clint(iob_module):
         # Setup core using LIB function
         setup(cls)
 
-
     @classmethod
     def _setup_confs(cls):
-        super()._setup_confs([
-            # Macros
-
-            # Parameters
-            {
-                "name": "DATA_W",
-                "type": "P",
-                "val": "32",
-                "min": "NA",
-                "max": "NA",
-                "descr": "Data bus width",
-            },
-            {
-                "name": "ADDR_W",
-                "type": "P",
-                "val": "16",
-                "min": "NA",
-                "max": "NA",
-                "descr": "Address bus width",
-            },
-            {
-                "name": "N_CORES",
-                "type": "P",
-                "val": "1",
-                "min": "NA",
-                "max": "8",
-                "descr": "Number of RISC-V Cores in the SoC",
-            },
-        ])
+        super()._setup_confs(
+            [
+                # Macros
+                # Parameters
+                {
+                    "name": "DATA_W",
+                    "type": "P",
+                    "val": "32",
+                    "min": "NA",
+                    "max": "NA",
+                    "descr": "Data bus width",
+                },
+                {
+                    "name": "ADDR_W",
+                    "type": "P",
+                    "val": "16",
+                    "min": "NA",
+                    "max": "NA",
+                    "descr": "Address bus width",
+                },
+                {
+                    "name": "N_CORES",
+                    "type": "P",
+                    "val": "1",
+                    "min": "NA",
+                    "max": "8",
+                    "descr": "Number of RISC-V Cores in the SoC",
+                },
+            ]
+        )
 
     @classmethod
     def _setup_ios(cls):
