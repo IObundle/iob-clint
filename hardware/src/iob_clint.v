@@ -73,8 +73,7 @@ module iob_clint #(
          for (c = 0; c < N_CORES; c = c + 1) begin
             mtimecmp[c] <= {64{1'b1}};
          end
-      end else if (iob_avalid_i & write &
-                  (iob_addr_i >= MTimeCMPBase) & (iob_addr_i < (MTimeCMPBase+8*N_CORES))) begin
+      end else if (iob_avalid_i & write & (iob_addr_i >= MTimeCMPBase) & (iob_addr_i < (MTimeCMPBase + 8 * N_CORES))) begin
          mtimecmp[iob_addr_i[AddrSelWidth+2:3]][(iob_addr_i[2]+1)*DATA_W-1-:DATA_W] <= iob_wdata_i;
       end
    end
@@ -83,8 +82,7 @@ module iob_clint #(
    always @(posedge clk_i, posedge arst_i) begin
       if (arst_i) begin
          mtime <= {64{1'b0}};
-      end else if (iob_avalid_i & write &
-                  (iob_addr_i >= MTimeBase) & (iob_addr_i < (MTimeBase+8))) begin
+      end else if (iob_avalid_i & write & (iob_addr_i >= MTimeBase) & (iob_addr_i < (MTimeBase + 8))) begin
          mtime[(iob_addr_i[2]+1)*DATA_W-1-:DATA_W] <= iob_wdata_i;
       end else if (increment_timer_r) begin
          mtime <= mtime + 1'b1;
@@ -98,8 +96,7 @@ module iob_clint #(
          for (j = 0; j < N_CORES; j = j + 1) begin
             msip_reg[j] <= {1'b0};
          end
-      end else if (iob_avalid_i & write &
-                  (iob_addr_i >= MSIBase) & (iob_addr_i < (MSIBase+4*N_CORES))) begin
+      end else if (iob_avalid_i & write & (iob_addr_i >= MSIBase) & (iob_addr_i < (MSIBase + 4 * N_CORES))) begin
          msip_reg[iob_addr_i[AddrSelWidth+1:2]] <= iob_wdata_i[0];
       end
    end
