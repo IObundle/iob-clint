@@ -140,18 +140,38 @@ class iob_clint(iob_module):
     def _setup_regs(cls):
         cls.regs += [
             {
-                "name": "dummy",
-                "descr": "Dummy registers to run register setup functions",
+                "name": "clint_regs",
+                "descr": "CLINT timer and software interrupt registers.",
                 "regs": [
                     {
-                        "name": "DUMMY",
+                        "name": "MSI",
                         "type": "R",
-                        "n_bits": 1,
+                        "n_bits": 32,
                         "rst_val": 0,
-                        "addr": -1,
+                        "addr": 0,
                         "log2n_items": 0,
                         "autologic": False,
-                        "descr": "Dummy Register",
+                        "descr": "Machine Software Interrupts.",
+                    },
+                    {
+                        "name": "MTIMECMP",
+                        "type": "R",
+                        "n_bits": 64,
+                        "rst_val": 0,
+                        "addr": 0x4000,
+                        "log2n_items": 0,
+                        "autologic": False,
+                        "descr": "Machine Timer compare register.",
+                    },
+                    {
+                        "name": "MTIME",
+                        "type": "R",
+                        "n_bits": 64,
+                        "rst_val": 0,
+                        "addr": 0xBFF8,
+                        "log2n_items": 0,
+                        "autologic": False,
+                        "descr": "Machine Time register.",
                     },
                 ],
             }
