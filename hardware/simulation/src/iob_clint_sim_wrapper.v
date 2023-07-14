@@ -43,7 +43,7 @@ module iob_clint_sim_wrapper #(
       .mtip(mtip),
       .msip(msip),
 
-      `include "iob_clkenrst_portmap.vs"
+      `include "clk_en_rst_portmap.vs"
    );
 
 endmodule

@@ -1,16 +1,12 @@
 #!/usr/bin/env python3
 
 import os
-import sys
 
 from iob_module import iob_module
-from setup import setup
 
 # Submodules
 from iob_lib import iob_lib
 from iob_utils import iob_utils
-from iob_clkenrst_portmap import iob_clkenrst_portmap
-from iob_clkenrst_port import iob_clkenrst_port
 from iob_reg_re import iob_reg_re
 from iob_counter import iob_counter
 
@@ -22,31 +18,21 @@ class iob_clint(iob_module):
     setup_dir = os.path.dirname(__file__)
 
     @classmethod
-    def _run_setup(cls):
-        # Hardware headers & modules
-        iob_module.generate("iob_s_port")
-        iob_module.generate("iob_s_portmap")
-        iob_module.generate("iob_wire")
-        iob_lib.setup()
-        iob_utils.setup()
-        iob_clkenrst_portmap.setup()
-        iob_clkenrst_port.setup()
-        iob_reg_re.setup()
-        iob_counter.setup()
-
-        cls._setup_confs()
-        cls._setup_ios()
-        cls._setup_regs()
-        cls._setup_block_groups()
-
-        # Verilog modules instances
-        # TODO
-
-        # Copy sources of this module to the build directory
-        super()._run_setup()
-
-        # Setup core using LIB function
-        setup(cls)
+    def _create_submodules_list(cls):
+        """Create submodules list with dependencies of this module"""
+        super()._create_submodules_list(
+            [
+                {"interface": "iob_s_port"},
+                {"interface": "iob_s_portmap"},
+                {"interface": "iob_wire"},
+                iob_lib,
+                iob_utils,
+                {"interface": "clk_en_rst_portmap"},
+                {"interface": "clk_en_rst_port"},
+                iob_reg_re,
+                iob_counter,
+            ]
+        )
 
     @classmethod
     def _setup_confs(cls):
@@ -140,38 +126,18 @@ class iob_clint(iob_module):
     def _setup_regs(cls):
         cls.regs += [
             {
-                "name": "clint_regs",
-                "descr": "CLINT timer and software interrupt registers.",
+                "name": "dummy",
+                "descr": "Dummy registers to run register setup functions",
                 "regs": [
                     {
-                        "name": "MSI",
-                        "type": "R",
-                        "n_bits": 32,
+                        "name": "DUMMY",
+                        "type": "W",
+                        "n_bits": 8,
                         "rst_val": 0,
-                        "addr": 0,
+                        "addr": 0x8000,
                         "log2n_items": 0,
                         "autologic": False,
-                        "descr": "Machine Software Interrupts.",
-                    },
-                    {
-                        "name": "MTIMECMP",
-                        "type": "R",
-                        "n_bits": 64,
-                        "rst_val": 0,
-                        "addr": 0x4000,
-                        "log2n_items": 0,
-                        "autologic": False,
-                        "descr": "Machine Timer compare register.",
-                    },
-                    {
-                        "name": "MTIME",
-                        "type": "R",
-                        "n_bits": 64,
-                        "rst_val": 0,
-                        "addr": 0xBFF8,
-                        "log2n_items": 0,
-                        "autologic": False,
-                        "descr": "Machine Time register.",
+                        "descr": "Dummy Register",
                     },
                 ],
             }
