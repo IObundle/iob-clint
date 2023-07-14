@@ -1,6 +1,6 @@
 #include <stdint.h>
 
-#include "iob_clint.h"
+#include "iob-clint.h"
 
 void clint_init(int base_address){
   base = base_address;

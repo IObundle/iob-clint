@@ -1,6 +1,1 @@
-# Ignore generated files
-hardware/simulation/*/*
-!hardware/simulation/testbench
-!hardware/simulation/simulation.mk
-!hardware/simulation/*/Makefile
-!hardware/simulation/*/iob_clint_tb.*
+hardware/simulation/icarus/a.out
