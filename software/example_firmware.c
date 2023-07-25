@@ -1,14 +1,14 @@
-#include <stdio.h>
-#include <stdint.h>
-#include "system.h"
-#include "periphs.h"
-#include "iob-uart.h"
-#include "iob_clint.h"
+#include "bsp.h"
+#include "iob-uart16550.h"
+#include "iob_soc_opencryptolinux_conf.h"
+#include "iob_soc_opencryptolinux_periphs.h"
+#include "iob_soc_opencryptolinux_system.h"
+#include "iob-clint.h"
 #include "printf.h"
 
 #include "riscv-csr.h"
 #include "riscv-interrupts.h"
-#include "iob_clint_timer.h"
+#include "iob-clint-timer.h"
 
 // Machine mode interrupt service routine
 static void irq_entry(void) __attribute__ ((interrupt ("machine")));
@@ -19,7 +19,7 @@ static volatile uint64_t timestamp = 0;
 int main() {
     //init uart
     uart_init(UART_BASE,FREQ/BAUD);
-    clint_init(CLINT_BASE);
+    clint_init(CLINT0_BASE);
 
     printf("\n\n\nHello world!\n\n\n");
 
