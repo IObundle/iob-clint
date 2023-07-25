@@ -11,12 +11,12 @@
 
 #include <stdint.h>
 
-// Define the CLINT_BASE if it was not already defined
-#ifndef CLINT_BASE
-  #define CLINT_BASE 0xB0000000
+// Define the CLINT0_BASE if it was not already defined
+#ifndef CLINT0_BASE
+  #define CLINT0_BASE 0x40000000
 #endif
-#define RISCV_MTIMECMP_ADDR (CLINT_BASE + 0x4000)
-#define RISCV_MTIME_ADDR    (CLINT_BASE + 0xBFF8)
+#define RISCV_MTIMECMP_ADDR (CLINT0_BASE + 0x4000)
+#define RISCV_MTIME_ADDR    (CLINT0_BASE + 0xBFF8)
 
 #define MTIME_FREQ_HZ 100000
 
