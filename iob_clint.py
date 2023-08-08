@@ -5,8 +5,6 @@ import os
 from iob_module import iob_module
 
 # Submodules
-from iob_lib import iob_lib
-from iob_utils import iob_utils
 from iob_reg_re import iob_reg_re
 from iob_counter import iob_counter
 
@@ -25,8 +23,6 @@ class iob_clint(iob_module):
                 {"interface": "iob_s_port"},
                 {"interface": "iob_s_portmap"},
                 {"interface": "iob_wire"},
-                iob_lib,
-                iob_utils,
                 {"interface": "clk_en_rst_s_s_portmap"},
                 {"interface": "clk_en_rst_s_port"},
                 iob_reg_re,
