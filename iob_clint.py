@@ -27,8 +27,8 @@ class iob_clint(iob_module):
                 {"interface": "iob_wire"},
                 iob_lib,
                 iob_utils,
-                {"interface": "clk_en_rst_portmap"},
-                {"interface": "clk_en_rst_port"},
+                {"interface": "clk_en_rst_s_s_portmap"},
+                {"interface": "clk_en_rst_s_port"},
                 iob_reg_re,
                 iob_counter,
             ]
