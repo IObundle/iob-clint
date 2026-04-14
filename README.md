@@ -1,4 +1,7 @@
-# MyCLINT
+# IOb-SoC Core Local Interrupt Controller (CLINT)
+
+## Overview
+
 RISC-V Core Local Interrupt Controller (CLINT) written in Verilog. The initial focus is for it to work as a IOb-SoC-VexRiscv peripheral.
 
 ## How to build the core w/ python-setup

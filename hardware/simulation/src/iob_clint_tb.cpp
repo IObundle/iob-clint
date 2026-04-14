@@ -6,7 +6,7 @@
 #include "verilated_vcd_c.h"
 
 // other macros
-#define CLK_PERIOD 10 // 10 ns
+#define CLK_PERIOD 10    // 10 ns
 #define RTC_PERIOD 30517 // 30.517us
 
 #define MSIP_BASE 0
@@ -14,19 +14,17 @@
 #define MTIME_BASE 49144
 
 vluint64_t main_time = 0;
-VerilatedVcdC* tfp = NULL;
-Viob_clint_sim_wrapper* dut = NULL;
+VerilatedVcdC *tfp = NULL;
+Viob_clint_sim_wrapper *dut = NULL;
 
-double sc_time_stamp(){
-  return main_time;
-}
+double sc_time_stamp() { return main_time; }
 
-void Timer(unsigned int ns){
-  for(int i = 0; i<ns; i++){
-    if(!(main_time%(CLK_PERIOD/2))){
+void Timer(unsigned int ns) {
+  for (int i = 0; i < ns; i++) {
+    if (!(main_time % (CLK_PERIOD / 2))) {
       dut->clk_i = !(dut->clk_i);
     }
-    if(!(main_time%(RTC_PERIOD/2))){
+    if (!(main_time % (RTC_PERIOD / 2))) {
       dut->rtc = !(dut->rtc);
     }
     dut->eval();
@@ -37,14 +35,14 @@ void Timer(unsigned int ns){
   }
 }
 
-int wait_responce(){
-  while(dut->iob_ready != 1){
+int wait_responce() {
+  while (dut->iob_ready != 1) {
     Timer(CLK_PERIOD);
   }
   return dut->iob_rdata;
 }
 
-int set_inputs(int address, int data, int strb){
+int set_inputs(int address, int data, int strb) {
   dut->iob_avalid = 1;
   dut->iob_addr = address;
   dut->iob_wdata = data;
@@ -54,16 +52,16 @@ int set_inputs(int address, int data, int strb){
   return wait_responce();
 }
 
-vluint64_t get_time(){
+vluint64_t get_time() {
   vluint64_t read_time = 0;
 
   *(int *)(&read_time) = set_inputs(MTIME_BASE, 0, 0);
-  *(int *)(&read_time+4) = set_inputs(MTIME_BASE+4, 0, 0);
+  *(int *)(&read_time + 4) = set_inputs(MTIME_BASE + 4, 0, 0);
 
   return read_time;
 }
 
-int main(int argc, char **argv, char **env){
+int main(int argc, char **argv, char **env) {
   Verilated::commandArgs(argc, argv);
   Verilated::traceEverOn(true);
   dut = new Viob_clint_sim_wrapper;
@@ -98,26 +96,27 @@ int main(int argc, char **argv, char **env){
   // set timer compare Register
   // set_inputs(address, data, strb);
   set_inputs(MTIMECMP_BASE, 10000, 15);
-  set_inputs(MTIMECMP_BASE+4,   0, 15);
+  set_inputs(MTIMECMP_BASE + 4, 0, 15);
   printf("Timer Interrupt is set.\n");
 
   vluint64_t read_time = 0;
 
-  while(1){
-    if(dut->mtip > 0){
-        printf("Machine Timer Interrupt is trigered\n");
-        set_inputs(MSIP_BASE, 1, 15);
-        read_time = get_time();
-        printf("Timer count: %ld\n", read_time);
-        set_inputs(MTIME_BASE, 0, 15);
-        set_inputs(MTIMECMP_BASE, RTC_PERIOD*100, 15);
+  while (1) {
+    if (dut->mtip > 0) {
+      printf("Machine Timer Interrupt is trigered\n");
+      set_inputs(MSIP_BASE, 1, 15);
+      read_time = get_time();
+      printf("Timer count: %ld\n", read_time);
+      set_inputs(MTIME_BASE, 0, 15);
+      set_inputs(MTIMECMP_BASE, RTC_PERIOD * 100, 15);
     }
-    if(dut->msip > 0){
-        printf("Machine Software Interrupt is trigered\n");
-        set_inputs(MSIP_BASE, 0, 15);
+    if (dut->msip > 0) {
+      printf("Machine Software Interrupt is trigered\n");
+      set_inputs(MSIP_BASE, 0, 15);
     }
     Timer(CLK_PERIOD);
-    if (main_time>RTC_PERIOD*10050) break;
+    if (main_time > RTC_PERIOD * 10050)
+      break;
   }
   Timer(CLK_PERIOD);
 
@@ -129,5 +128,4 @@ int main(int argc, char **argv, char **env){
   delete dut;
   dut = NULL;
   exit(0);
-
 }

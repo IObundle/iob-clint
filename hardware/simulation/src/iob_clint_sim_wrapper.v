@@ -5,21 +5,14 @@ module iob_clint_sim_wrapper #(
    parameter DATA_W  = 32,
    parameter N_CORES = 1
 ) (
-   input clk_i,
-   input arst_i,
+   `include "iob_clint_iob_clk_s_port.vs"
 
-   input rtc,
+   input rtc_i,
 
-   input  [         0:0] iob_avalid,
-   input  [  ADDR_W-1:0] iob_addr,
-   input  [  DATA_W-1:0] iob_wdata,
-   input  [DATA_W/8-1:0] iob_wstrb,
-   output [         0:0] iob_rvalid,
-   output [  DATA_W-1:0] iob_rdata,
-   output [         0:0] iob_ready,
+   `include "iob_clint_iob_s_port.vs"
 
-   output [N_CORES-1:0] mtip,
-   output [N_CORES-1:0] msip
+   output [N_CORES-1:0] mtip_o,
+   output [N_CORES-1:0] msip_o
 );
 
 `ifdef VCD
@@ -29,21 +22,19 @@ module iob_clint_sim_wrapper #(
    end
 `endif
 
-   wire cke_i = 1'b1;
-
    iob_clint #(
       .ADDR_W (ADDR_W),
       .DATA_W (DATA_W),
       .N_CORES(N_CORES)
    ) clint (
-      `include "iob_s_portmap.vs"
+       `include "iob_clint_iob_clk_s_s_portmap.vs"
 
-      .rt_clk(rtc),
+       .rt_clk_i(rtc_i),
 
-      .mtip(mtip),
-      .msip(msip),
+       .mtip_o(mtip_o),
+       .msip_o(msip_o),
 
-      `include "clk_en_rst_s_s_portmap.vs"
+       `include "iob_clint_iob_s_s_portmap.vs"
    );
 
 endmodule

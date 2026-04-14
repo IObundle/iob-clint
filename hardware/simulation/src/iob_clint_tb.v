@@ -1,7 +1,8 @@
 `timescale 1ns / 1ps
 
 `include "iob_clint_conf.vh"
-`include "bsp.vh"
+
+`define FREQ 100000000
 `define RTC_FREQ 100000
 
 `define MSIP_BASE 0
@@ -23,7 +24,7 @@ module iob_clint_tb;
    reg                               arst_i = 0;
 
    // DUT inputs
-   reg                               iob_avalid;
+   reg                               iob_valid;
    reg     [  `IOB_CLINT_ADDR_W-1:0] iob_addr;
    reg     [  `IOB_CLINT_DATA_W-1:0] iob_wdata;
    reg     [`IOB_CLINT_DATA_W/8-1:0] iob_wstrb;
@@ -43,7 +44,7 @@ module iob_clint_tb;
    initial begin
       //assert reset
       #100 arst_i = 1;
-      iob_avalid = 0;
+      iob_valid  = 0;
       iob_addr   = 0;
       iob_wdata  = 0;
       iob_wstrb  = 0;
@@ -86,21 +87,16 @@ module iob_clint_tb;
    end
 
    iob_clint_sim_wrapper clint_sim_wrapper (
-      .clk_i (clk_i),
-      .arst_i(arst_i),
+       .clk_i (clk_i),
+       .arst_i(arst_i),
+       .cke_i (1'b1),
 
-      .rtc(rtc),
+       .rtc_i(rtc),
 
-      .iob_avalid(iob_avalid),
-      .iob_addr  (iob_addr),
-      .iob_wdata (iob_wdata),
-      .iob_wstrb (iob_wstrb),
-      .iob_rvalid(iob_rvalid),
-      .iob_rdata (iob_rdata),
-      .iob_ready (iob_ready),
+       `include "iob_clint_iob_s_portmap.vs"
 
-      .mtip(mtip),
-      .msip(msip)
+       .mtip_o(mtip),
+       .msip_o(msip)
    );
 
    task wait_responce;
@@ -118,11 +114,11 @@ module iob_clint_tb;
       input [31:0] set_data;
       input [3:0] set_strb;
       begin
-         iob_avalid = 1;
-         iob_addr   = set_address;
-         iob_wdata  = set_data;
-         iob_wstrb  = set_strb;
-         @(posedge clk_i) #1 iob_avalid = 0;
+         iob_valid = 1;
+         iob_addr  = set_address;
+         iob_wdata = set_data;
+         iob_wstrb = set_strb;
+         @(posedge clk_i) #1 iob_valid = 0;
          iob_wstrb = 0;
       end
    endtask
