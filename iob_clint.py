@@ -177,8 +177,8 @@ def setup(py_params_dict):
                 },
                 "connect": {
                     "clk_en_rst_s": "clk_en_rst_s",
-                    "counter_rst_i": "cnt_rst",
-                    "counter_en_i": "cnt_en",
+                    "rst_i": "cnt_rst",
+                    "en_i": "cnt_en",
                     "data_o": "cnt_o",
                 },
             },
