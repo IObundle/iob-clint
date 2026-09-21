@@ -146,7 +146,7 @@ def setup(py_params_dict):
         #
         "subblocks": [
             {  # Currently used for docs only
-                "core_name": "iob_csrs",
+                "core": "iob_csrs",
                 "instantiate": False,
                 "instance_name": "csrs",
                 "instance_description": "Control/Status Registers",
@@ -169,7 +169,7 @@ def setup(py_params_dict):
                 },
             },
             {
-                "core_name": "iob_counter",
+                "core": "iob_counter",
                 "instance_name": "iob_counter_0",
                 "parameters": {
                     "DATA_W": "10",
@@ -186,7 +186,7 @@ def setup(py_params_dict):
         "sw_modules": [
             # Software modules
             {
-                "core_name": "iob_linux_device_drivers",
+                "core": "iob_linux_device_drivers",
                 "compatible_str": "riscv,clint0",
                 # Extra device tree properties specific to this peripheral
                 # - Connect to system CPU 's inteerrupt controller, identified by 'CPU0_intc'
