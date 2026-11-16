@@ -29,6 +29,7 @@ EXTRA_ARGS +=--debug_level $(DEBUG)
 endif
 
 setup:
+	bash ./ci_bootstrap.sh || true
 	nix-shell --run "py2hwsw $(CORE) setup --no_verilog_lint --py_params '$(PY_PARAMS)' $(EXTRA_ARGS)"
 
 pc-emul-run:
